@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Image, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import { Text, View, StyleSheet, Image, KeyboardAvoidingView, Platform, Keyboard, Alert } from 'react-native';  // Added Alert import
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from "../../src/styles/styles";
 import { TextInput, Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import { supabase } from "../utils/supabase";
 
 const Login = () => {
     const router = useRouter();
@@ -12,6 +13,7 @@ const Login = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const [logoSize, setLogoSize] = useState(150);
+    const [isLoginLoading, setIsLoginLoading] = useState(false);  // Added state for loading
     const footer = require("../../assets/gradient.png");
     const logo = require("../../assets/codered.png");
 
@@ -30,6 +32,41 @@ const Login = () => {
             keyboardDidHideListener.remove();
         };
     }, []);
+
+    const handleLogin = async () => {
+        setIsLoginLoading(true); // Show loading during login attempt
+
+        if (!email || !password) {
+            Alert.alert("Error", "Please fill in both email and password.");
+            setIsLoginLoading(false); // Hide loading on error
+            return;
+        }
+
+        try {
+            // Log in the user using Supabase Auth
+            const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+
+            if (authError) {
+                Alert.alert("Log In Failed", "Invalid email or password.");
+                setIsLoginLoading(false); // Hide loading on error
+                return;
+            }
+
+            // Successful login
+            Alert.alert("Login Successful", "Welcome back!");
+            router.replace('dashboard'); // Navigate to the dashboard or desired screen
+
+        } catch (error) {
+            console.error("Error logging in:", error.message);
+            Alert.alert("Error", "An error occurred while logging in. Please try again.");
+            setIsLoginLoading(false); // Hide loading on error
+        } finally {
+            setIsLoginLoading(false); // Hide loading after process is complete
+        }
+    };
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white', justifyContent: 'center' }}>
@@ -76,7 +113,7 @@ const Login = () => {
                 />
             </View>
 
-            <View style={{ alignItems: 'center'}}>
+            <View style={{ alignItems: 'center' }}>
                 <Button
                     mode="text"
                     onPress={() => router.push('recover')}
@@ -95,7 +132,7 @@ const Login = () => {
             <View style={{ alignItems: 'center', marginBottom: isKeyboardVisible ? -100 : 0 }}>
                 <Button
                     mode="elevated"
-                    onPress={() => router.replace('dashboard')}
+                    onPress={handleLogin} // Fixed to call handleLogin
                     buttonColor="#fe0009"
                     labelStyle={{
                         fontSize: 18,
@@ -105,6 +142,8 @@ const Login = () => {
                         marginBottom: -5
                     }}
                     style={[styles.button, { borderRadius: 100, width: 290, height: 50 }]}
+                    loading={isLoginLoading} // Show loading indicator while logging in
+                    disabled={isLoginLoading} // Disable button while loading
                 >
                     LOG IN
                 </Button>

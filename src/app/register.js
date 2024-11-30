@@ -37,6 +37,7 @@ const Register = () => {
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const [selectedBarangay, setSelectedBarangay] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(""); // Date of Birth state for the calendar
   const [showDatePicker, setShowDatePicker] = useState(false); // State to show/hide date picker
@@ -86,6 +87,7 @@ const Register = () => {
         !selectedGender ||
         !selectedCountry ||
         !selectedRegion ||
+        !selectedCity ||
         !selectedBarangay ||
         !currentAddress ||
         !zipcode
@@ -105,28 +107,26 @@ const Register = () => {
     }
 
     try {
-        // Step 1: Check if the email already exists
-        const { data: existingUser, error: checkEmailError } = await supabase
-            .from("user")
-            .select("user_email")
-            .eq("user_email", email)
-            .single();
-
-        if (checkEmailError) {
-            console.log("Email check error:", checkEmailError);
-            alert("An error occurred while checking the email. Please try again later");
-            setIsRegisterPressed(false);
-            setIsLoading(false);
-            return;
-        }
-
-        if (existingUser) {
-            // Email already registered
-            alert("Account already exists. Please log in now.");
-            setIsRegisterPressed(false);
-            setIsLoading(false);
-            return;
-        }
+      const { data: existingUser, error: checkEmailError } = await supabase
+      .from("user")
+      .select("user_email")
+      .eq("user_email", email)
+      .maybeSingle();
+  
+    if (checkEmailError) {
+        console.log("Email check error:", checkEmailError);
+        alert("An error occurred while checking the email. Please try again later");
+        setIsRegisterPressed(false);
+        setIsLoading(false);
+        return;
+    }
+    
+    if (existingUser) {
+        alert("Account already exists. Please log in now.");
+        setIsRegisterPressed(false);
+        setIsLoading(false);
+        return;
+    }
 
         // Step 2: Sign up the user with Supabase Auth
         const { data: { session }, error: authError } = await supabase.auth.signUp({
@@ -159,6 +159,7 @@ const Register = () => {
             user_phoneNumber: phoneNumber,
             user_country: selectedCountry,
             user_region: selectedRegion,
+            user_city: selectedCity,
             user_barangay: selectedBarangay,
             user_zipcode: zipcode,
             user_currentAddress: currentAddress,
@@ -356,6 +357,26 @@ const Register = () => {
               >
               <Picker.Item label="SELECT REGION" value="" />
               <Picker.Item label="Region X" value="Region X" />
+          </Picker>
+          </View>
+
+          <View style={{
+            borderWidth: 1, 
+            borderColor: 'red', 
+            borderRadius: 5, 
+            marginVertical: 10,
+            width: '94%',
+            alignSelf: 'center' 
+          }}>
+          
+          <Picker
+              selectedValue={selectedCity}
+              onValueChange={(itemValue) => {
+                  if (itemValue !== "") setSelectedCity(itemValue);
+                }}
+              >
+              <Picker.Item label="SELECT CITY/MUNICIPALITY" value="" />
+              <Picker.Item label="Cagayan de Oro City" value="Cagayan de Oro City" />
           </Picker>
           </View>
 
