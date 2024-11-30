@@ -5,6 +5,7 @@ import { Stack } from 'expo-router'
 import { Feather } from '@expo/vector-icons';
 import { PaperProvider } from 'react-native-paper'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import {supabase} from "../utils/supabase";
 
 const RootLayout = () => {
 

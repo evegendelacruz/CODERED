@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { StyleSheet, Text, ScrollView, Image, View, TouchableOpacity, Platform } from 'react-native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { TextInput, Button, Checkbox,  } from "react-native-paper";
-import { useRouter } from 'expo-router'; // Import router
+import { useRouter } from 'expo-router'; 
 import styles from "../../src/styles/styles";
 import {Picker} from '@react-native-picker/picker';
-import DateTimePicker from '@react-native-community/datetimepicker'; // Import DateTimePicker
+import DateTimePicker from '@react-native-community/datetimepicker';
+import {supabase} from "../utils/supabase";
 
 const Register = () => {
   const router = useRouter();
@@ -27,16 +28,16 @@ const Register = () => {
   const [isRegisterPressed, setIsRegisterPressed] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  
+  const [isLoading, setIsLoading] = useState(false);
 
   // Helper states for validation
   const [emailError, setEmailError] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
 
-  const [selectedGender, setSelectedGender] = useState();
-  const [selectedCountry, setSelectedCountry] = useState();
-  const [selectedRegion, setSelectedRegion] = useState();
-  const [selectedBarangay, setSelectedBarangay] = useState();
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedRegion, setSelectedRegion] = useState("");
+  const [selectedBarangay, setSelectedBarangay] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(""); // Date of Birth state for the calendar
   const [showDatePicker, setShowDatePicker] = useState(false); // State to show/hide date picker
 
@@ -64,10 +65,141 @@ const Register = () => {
       const year = selectedDate.getFullYear();
       const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
       const day = selectedDate.getDate().toString().padStart(2, '0');
-      setDateOfBirth(`${day}/${month}/${year}`);
+      setDateOfBirth(`${month}/${day}/${year}`);
     }
     setShowDatePicker(false);
   };
+
+  const handleRegister = async () => {
+    setIsRegisterPressed(true);
+    setIsLoading(true);
+
+    // Basic Validation - Check if all fields are filled
+    if (
+        !firstName ||
+        !middleName ||
+        !lastName ||
+        !email ||
+        !password ||
+        !confirmPassword ||
+        !phoneNumber ||
+        !selectedGender ||
+        !selectedCountry ||
+        !selectedRegion ||
+        !selectedBarangay ||
+        !currentAddress ||
+        !zipcode
+    ) {
+        alert("Please complete all fields.");
+        setIsRegisterPressed(false);
+        setIsLoading(false);
+        return;
+    }
+
+    // Password match validation
+    if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        setIsRegisterPressed(false);
+        setIsLoading(false);
+        return;
+    }
+
+    try {
+        // Step 1: Check if the email already exists
+        const { data: existingUser, error: checkEmailError } = await supabase
+            .from("user")
+            .select("user_email")
+            .eq("user_email", email)
+            .single();
+
+        if (checkEmailError) {
+            console.log("Email check error:", checkEmailError);
+            alert("An error occurred while checking the email. Please try again later");
+            setIsRegisterPressed(false);
+            setIsLoading(false);
+            return;
+        }
+
+        if (existingUser) {
+            // Email already registered
+            alert("Account already exists. Please log in now.");
+            setIsRegisterPressed(false);
+            setIsLoading(false);
+            return;
+        }
+
+        // Step 2: Sign up the user with Supabase Auth
+        const { data: { session }, error: authError } = await supabase.auth.signUp({
+            email,
+            password,
+        });
+
+        if (authError) {
+            console.log("session:", session);
+            alert(`Registration failed: ${authError.message}`);
+            setIsRegisterPressed(false);
+            setIsLoading(false);
+            return;
+        }
+
+        // Step 3: Format Birthdate if provided
+        const formattedBirthdate = dateOfBirth
+            ? new Date(dateOfBirth.split("/").reverse().join("-"))
+                .toISOString()
+                .split("T")[0]
+            : null;
+
+        // Step 4: Prepare user data payload (no need to include user_id since it's auto-generated)
+        const payload = {
+            user_firstname: firstName,
+            user_middlename: middleName,
+            user_lastname: lastName,
+            user_gender: selectedGender,
+            user_birthdate: formattedBirthdate,
+            user_phoneNumber: phoneNumber,
+            user_country: selectedCountry,
+            user_region: selectedRegion,
+            user_barangay: selectedBarangay,
+            user_zipcode: zipcode,
+            user_currentAddress: currentAddress,
+            user_email: email, 
+            user_password: password, 
+        };
+
+        // Log the payload to verify
+        console.log("Inserting Payload:", payload);
+
+        // Step 5: Insert user data into public.user table
+        const { data: insertData, error: insertError } = await supabase
+            .from("user") // Ensure you're targeting the correct schema
+            .insert([payload]);
+
+        if (insertError) {
+            console.error("Database Insert Error:", insertError);
+            alert(`Error inserting user data: ${insertError.message}`);
+            setIsRegisterPressed(false);
+            setIsLoading(false);
+            return;
+        }
+
+        // Step 6: Successful Registration
+        console.log("Database Insert Successful:", insertData);
+        alert("Registration successful!");
+
+        // Navigate to the next page (e.g., blood type page)
+        router.push("/bloodtype"); // Adjust the navigation path as needed
+    } catch (error) {
+        console.error("Unexpected Error:", error);
+        alert("An unexpected error occurred during registration. Please try again.");
+    } finally {
+        setIsRegisterPressed(false);
+        setIsLoading(false);
+    }
+};
+
+
+
+
 
   return (
     <SafeAreaProvider>
@@ -409,7 +541,9 @@ const Register = () => {
           <View style={{ alignItems: 'center' }}>
             <Button
               mode="elevated"
-              onPress={() => router.push('bloodtype')} // Redirect to the desired route
+              onPress={handleRegister}
+              disabled={isRegisterPressed}
+              loading={isLoading}
               buttonColor={isRegisterPressed ? "#ff8e92" : "red"}
               labelStyle={{ fontSize: 18, textAlign: 'center', color: 'white', fontFamily: "PoppinsBold" }} 
               style={{ paddingVertical: 7, paddingHorizontal: 5, margin: 10, borderRadius: 100, width: 290, height: 50, marginBottom:120 }}
