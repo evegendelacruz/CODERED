@@ -83,7 +83,7 @@ const Login = () => {
 
             <View style={{ alignItems: 'center' }}>
                 <TextInput
-                    placeholder="EMAIL"
+                    label='EMAIL'
                     value={email}
                     mode="outlined"
                     activeOutlineColor="red"
