@@ -198,10 +198,6 @@ const Register = () => {
     }
 };
 
-
-
-
-
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>

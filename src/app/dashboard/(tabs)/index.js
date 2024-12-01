@@ -1,26 +1,57 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TextInput,
-  Modal,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { View, Text, Image, ScrollView,TextInput, Modal,TouchableOpacity,StyleSheet,} from "react-native";
 import { Button } from "react-native-paper";
+import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
+import * as FileSystem from 'expo-file-system';
+import { HelperText } from "react-native-paper";
+import {supabase} from "../../../utils/supabase";
 
 const Home = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [fileName, setFileName] = useState("");
+  const [recipientName, setRecipientName] = useState("");
   const [selectedBloodType, setSelectedBloodType] = useState("");
   const [selectedHospital, setSelectedHospital] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedUrgency, setSelectedUrgency] = useState("");
-  const [bagQuantity, setBagQuantity] = useState(1);
+  const [bagQuantity, setBagQuantity] = useState(0);
+  const [caption, setCaption] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const [image, setImage] = useState("");
+  const getFileExtension = (uri) => {
+    const fileName = uri.split('/').pop();
+    return fileName.split('.').pop(); 
+  };
+
+  const handleImagePickerPress = async (source) => {
+    let result;
+    if (source === "camera") {
+      result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+      });
+    } else {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+      });
+    }
+  
+    if (!result.canceled) {
+      const uri = result.assets[0].uri; 
+      setImage(uri); 
+  
+      const fileName = uri.split('/').pop();
+      console.log('File Name:', fileName);  
+  
+      setFileName(fileName);  
+    }
+  };
+  
 
   const increaseQuantity = () => {
     if (bagQuantity < 10) setBagQuantity(bagQuantity + 1);
@@ -34,34 +65,84 @@ const Home = () => {
   const testlogo = require("../../../assets/testlogo.png");
   const nopost = require("../../../assets/nopost.png");
 
-  // Define background colors based on selection
-  const getUrgencyBackgroundColor = () => {
-    switch (selectedUrgency) {
-      case "Emergency":
-        return "#ffcccc"; // Red for Emergency
-      case "Urgent":
-        return "#ffe0b3"; // Orange for Urgent
-      case "Non-Urgent":
-        return "#fff2b3"; // Yellow for Non-Urgent
-      case "Elective":
-        return "#d1f7d1"; // Green for Elective
-      default:
-        return "white";
+  const handlePostRequest = async () => {
+    setIsLoading(true); 
+    try {
+      
+      if (
+        !recipientName ||
+        !selectedBloodType ||
+        !selectedHospital ||
+        !selectedUrgency ||
+        !selectedStatus ||
+        bagQuantity <= 0
+      ) {
+        alert("Please fill in all the required fields.");
+        setIsLoading(false); 
+        return;
+      }
+  
+      let imageUrl = null;
+  
+      const { data: user, error } = await supabase.auth.getUser();
+      if (error || !user) {
+        alert('You must be logged in to upload files.');
+        setIsLoading(false); 
+        return;
+      }
+  
+      if (image) {
+        const fileExtension = getFileExtension(image);
+        const filePath = `request_images/${fileName}`;
+        const { data, error: uploadError } = await supabase.storage
+          .from('uploads')
+          .upload(filePath, image, {
+            contentType: `image/${fileExtension}`,
+          });
+  
+        if (uploadError) {
+          console.error('Image upload error: ', uploadError);
+          alert("Image upload failed.");
+          setIsLoading(false); 
+          return;
+        }
+  
+        const { publicURL } = supabase.storage
+          .from('uploads')
+          .getPublicUrl(filePath);
+  
+        imageUrl = publicURL;
+      }
+  
+      const { data: requestData, error: dbError } = await supabase
+        .from('blood_request') 
+        .insert([{
+          request_recipient: recipientName,
+          request_blood_type: selectedBloodType,
+          request_bag_qnty: bagQuantity,
+          request_hospital: selectedHospital,
+          request_urgency_lvl: selectedUrgency,
+          request_donation_status: selectedStatus,
+          request_caption: caption,
+          request_file: JSON.stringify({ fileUrl: imageUrl, fileName }),
+        }]);
+  
+      if (dbError) {
+        console.error('Error inserting request data:', dbError);
+        alert("Request submission failed.");
+        setIsLoading(false);
+        return;
+      }
+  
+      alert("Blood Donation Request posted successfully!");
+      setModalVisible(false); 
+    } catch (error) {
+      console.error("Error uploading request:", error);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  const getStatusBackgroundColor = () => {
-    switch (selectedStatus) {
-      case "Ongoing":
-        return "#b3e0ff"; // Blue for Ongoing
-      case "Fulfilled":
-        return "#d9f7d9"; // Green for Fulfilled
-      case "Cancelled":
-        return "#ffcccc"; // Red for Cancelled
-      default:
-        return "white";
-    }
-  };
+  };  
 
   return (
     <SafeAreaView>
@@ -97,8 +178,6 @@ const Home = () => {
           >
             REQUEST BLOOD DONATION
           </Button>
-
-          {/* Blood Donation Eligibility Section */}
           <View
             style={{
               borderColor: "#918F8F",
@@ -194,18 +273,27 @@ const Home = () => {
           onRequestClose={() => setModalVisible(false)}
         >
           <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-            <ScrollView contentContainerStyle={{ padding: 20 }}>
-              <Text
-                style={{
-                  fontSize: 18,
-                  color: "red",
-                  marginBottom: 10,
-                  fontFamily: "PoppinsBold",
-                  textAlign: "center",
-                }}
-              >
-                REQUEST FORM
-              </Text>
+            <ScrollView contentContainerStyle={{ padding: 30 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
+            <TouchableOpacity
+              
+              onPress={() => setModalVisible(false)}
+            >
+              <AntDesign name="arrowleft" size={24} color="black" />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 18,
+                color: "red",
+                fontFamily: "PoppinsBold",
+                textAlign: "center",
+                flex: 1, 
+              }}
+            >
+              REQUEST FORM
+            </Text>
+          </View>
+
 
               <Text style={{ marginBottom: 5, fontFamily: "Poppins" }}>
                 Blood Recipient
@@ -221,7 +309,12 @@ const Home = () => {
                   fontFamily: "Poppins",
                 }}
                 placeholder="Full Name"
+                value={recipientName}
+                onChangeText={setRecipientName}
               />
+              <HelperText type="error" visible={!recipientName}>
+                Recipient name is required.
+              </HelperText>
 
               <Text style={{ marginBottom: 5, fontFamily: "Poppins" }}>
                 Blood Type
@@ -378,7 +471,6 @@ const Home = () => {
                     borderWidth: 1,
                     borderColor: "red",
                     borderRadius: 5,
-                    backgroundColor: getUrgencyBackgroundColor(),
                   }}
                 >
                   <Picker.Item label="Select Urgency Level" value="" style={{ fontSize: 14 }} />
@@ -407,7 +499,6 @@ const Home = () => {
                     borderWidth: 1,
                     borderColor: "red",
                     borderRadius: 5,
-                    backgroundColor: getStatusBackgroundColor(),
                   }}
                 >
                   <Picker.Item label="Select Donation Status" value="" style={{ fontSize: 14 }} />
@@ -435,11 +526,11 @@ const Home = () => {
                 }}
                 placeholder="Add caption to your request here..."
                 multiline
+                value={caption}
+                onChangeText={setCaption}
+
               />
 
-              <Text style={{ marginBottom: 5, fontFamily: "Poppins" }}>
-                Add Photo
-              </Text>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
@@ -448,27 +539,69 @@ const Home = () => {
                   padding: 10,
                   alignItems: "center",
                   marginBottom: 10,
-                  borderStyle: 'dashed'
+                  borderStyle: "dashed",
                 }}
+                onPress={() => handleImagePickerPress("library")}
               >
-                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                 
-                  <AntDesign name="upload" size={13} color="#000" style={{ marginRight: 10 }} />
-                  
-                  <Text style={{ fontFamily: "Poppins", color: '#ccc' }}>Upload here</Text>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <AntDesign
+                    name="upload"
+                    size={13}
+                    color="#000"
+                    style={{ marginRight: 10 }}
+                  />
+                  <Text style={{ fontFamily: "Poppins", color: "gray" }}>Upload from Gallery</Text>
                 </View>
               </TouchableOpacity>
+              <Text style={{fontFamily: 'Poppins', marginVertical: 5, textAlign:'center'}}>OR</Text>
+              <TouchableOpacity
+                style={{
+                  borderWidth: 1,
+                  borderColor: "red",
+                  borderRadius: 5,
+                  padding: 10,
+                  alignItems: "center",
+                  marginBottom: 20,
+                  borderStyle: "dashed",
+                }}
+                onPress={() => handleImagePickerPress("camera")}
+              >
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <AntDesign
+                    name="camera"
+                    size={16}
+                    color="#000"
+                    style={{ marginRight: 10, marginBottom: 3 }}
+                  />
+                  <Text style={{ fontFamily: "Poppins", color: "gray" }}>Take a Photo</Text>
+                </View>
+              </TouchableOpacity>
+
+              {image ? (
+                <Image
+                  source={{ uri: image }}
+                  style={{
+                    width: "100%",
+                    height: 200,
+                    marginVertical: 10,
+                    resizeMode: "contain",
+                  }}
+                />
+              ) : null}
 
               <Button
                 mode="elevated"
                 buttonColor={"#fe0009"}
+                style={{ borderRadius: 5, height: 50, marginVertical: 20 }}
                 labelStyle={{
-                  fontSize: 14,
+                  fontSize: 16,
                   textAlign: "center",
                   color: "white",
-                  fontFamily: "Poppins",
+                  fontFamily: "PoppinsBold",
+                  padding: 5,
                 }}
-                onPress={() => setModalVisible(false)}
+                onPress={handlePostRequest}
+                disabled={isLoading}
               >
                 POST
               </Button>
@@ -490,7 +623,6 @@ const styles = StyleSheet.create({
     borderColor: "red",
     borderRadius: 5,
     overflow: "hidden",
-    width: 322,
     justifyContent: "space-between",
     marginBottom: 10,
   },
