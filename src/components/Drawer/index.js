@@ -64,7 +64,7 @@ export default function DrawerContent(props) {
                 </View>
                 <DrawerItemList {...props} />
                 <DrawerItem
-                    label="LOG OUT"
+                    label="Log Out"
                     icon={({ color, size }) => (
                         <MaterialCommunityIcons name='logout' color={color} size={size} />
                     )}

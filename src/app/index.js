@@ -56,7 +56,7 @@ const Login = () => {
             }
 
             // Successful login
-            Alert.alert("Login Successful", "Welcome back!");
+            Alert.alert("Login Successful", "Welcome,  Pulse!");
             router.replace('dashboard'); // Navigate to the dashboard or desired screen
 
         } catch (error) {

@@ -32,7 +32,7 @@ export default function DrawerLayout() {
                     marginTop: 5,
                     color: focused ? '#fe0009' : 'gray',
                     }}
-                        >HOME</Text>
+                        >Home</Text>
                         ),
                         title: 'CODE RED',
                         drawerActiveTintColor: '#fe0009',
@@ -67,7 +67,7 @@ export default function DrawerLayout() {
                     marginTop: 5,
                     color: focused ? '#fe0009' : 'gray',
                     }}
-                    > PROFILE</Text>
+                    > Profile</Text>
                     ),
                     title: 'PROFILE',
                     drawerActiveTintColor: '#fe0009',
@@ -102,7 +102,7 @@ export default function DrawerLayout() {
                     marginTop: 5,
                     color: focused ? '#fe0009' : 'gray',
                     }}
-                    >ELIGIBILITY TEST</Text>
+                    >RapidPass®</Text>
                     ),
                     title: 'ELIGIBILITY TEST',
                     drawerActiveTintColor: '#fe0009',
@@ -136,7 +136,7 @@ export default function DrawerLayout() {
                     marginTop: 5,
                     color: focused ? '#fe0009' : 'gray',
                     }}
-                    > LEARN MORE</Text>
+                    > Learn More</Text>
                     ),
                     title: 'LEARN MORE',
                     drawerActiveTintColor: '#fe0009',

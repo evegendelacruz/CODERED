@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { View, Text, Image, ScrollView,TextInput, Modal,TouchableOpacity,StyleSheet,} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, Image, ScrollView,TextInput, Modal,TouchableOpacity,StyleSheet, Alert, FlatList} from "react-native";
 import { Button } from "react-native-paper";
 import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
-import * as FileSystem from 'expo-file-system';
-import { HelperText } from "react-native-paper";
+import PostCard from "../../../components/PostCard";
+import NewPost from "../../../components/NewPost";
 import {supabase} from "../../../utils/supabase";
 
 const Home = () => {
@@ -20,6 +20,7 @@ const Home = () => {
   const [bagQuantity, setBagQuantity] = useState(0);
   const [caption, setCaption] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [posts, setPosts] = useState([]);
   
   const [image, setImage] = useState("");
   const getFileExtension = (uri) => {
@@ -66,9 +67,8 @@ const Home = () => {
   const nopost = require("../../../assets/nopost.png");
 
   const handlePostRequest = async () => {
-    setIsLoading(true); 
+    setIsLoading(true);
     try {
-      
       if (
         !recipientName ||
         !selectedBloodType ||
@@ -78,7 +78,7 @@ const Home = () => {
         bagQuantity <= 0
       ) {
         alert("Please fill in all the required fields.");
-        setIsLoading(false); 
+        setIsLoading(false);
         return;
       }
   
@@ -86,8 +86,8 @@ const Home = () => {
   
       const { data: user, error } = await supabase.auth.getUser();
       if (error || !user) {
-        alert('You must be logged in to upload files.');
-        setIsLoading(false); 
+        alert("You must be logged in to upload files.");
+        setIsLoading(false);
         return;
       }
   
@@ -95,120 +95,111 @@ const Home = () => {
         const fileExtension = getFileExtension(image);
         const filePath = `request_images/${fileName}`;
         const { data, error: uploadError } = await supabase.storage
-          .from('uploads')
+          .from("uploads")
           .upload(filePath, image, {
             contentType: `image/${fileExtension}`,
           });
   
         if (uploadError) {
-          console.error('Image upload error: ', uploadError);
+          console.error("Image upload error: ", uploadError);
           alert("Image upload failed.");
-          setIsLoading(false); 
+          setIsLoading(false);
           return;
         }
   
         const { publicURL } = supabase.storage
-          .from('uploads')
+          .from("uploads")
           .getPublicUrl(filePath);
   
         imageUrl = publicURL;
       }
   
       const { data: requestData, error: dbError } = await supabase
-        .from('blood_request') 
-        .insert([{
-          request_recipient: recipientName,
-          request_blood_type: selectedBloodType,
-          request_bag_qnty: bagQuantity,
-          request_hospital: selectedHospital,
-          request_urgency_lvl: selectedUrgency,
-          request_donation_status: selectedStatus,
-          request_caption: caption,
-          request_file: JSON.stringify({ fileUrl: imageUrl, fileName }),
-        }]);
+        .from("blood_request")
+        .insert([
+          {
+            request_recipient: recipientName,
+            request_blood_type: selectedBloodType,
+            request_bag_qnty: bagQuantity,
+            request_hospital: selectedHospital,
+            request_urgency_lvl: selectedUrgency,
+            request_donation_status: selectedStatus,
+            request_caption: caption,
+            request_file: JSON.stringify({ fileUrl: imageUrl, fileName }),
+          },
+        ]);
   
       if (dbError) {
-        console.error('Error inserting request data:', dbError);
+        console.error("Error inserting request data:", dbError);
         alert("Request submission failed.");
         setIsLoading(false);
         return;
       }
   
-      alert("Blood Donation Request posted successfully!");
-      setModalVisible(false); 
+      Alert.alert("Confirmation", "Blood Donation Request posted successfully!");
+      setModalVisible(false);
+  
+      setRecipientName("");
+      setSelectedBloodType("");
+      setBagQuantity(0);
+      setSelectedHospital("");
+      setSelectedUrgency("");
+      setSelectedStatus("");
+      setCaption("");
+      setImage("");
+      setFileName("");
     } catch (error) {
       console.error("Error uploading request:", error);
       alert("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
-  };  
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+  
+  const fetchPosts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("blood_request")
+        .select("*")
+        .order("request_id", { ascending: true });
+  
+      if (error) {
+        console.error("Error fetching posts:", error);
+        return;
+      }
+      console.log(data);  // Log data to check the structure
+      setPosts(data || []);
+    } catch (err) {
+      console.error("Error fetching posts:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+  
 
   return (
     <SafeAreaView>
-      <ScrollView>
-        <View>
-          <Image
-            source={banner}
-            style={{
-              height: 150,
-              width: 360,
-              zIndex: -1,
-              alignSelf: "center",
-              resizeMode: "cover",
-            }}
-          />
-          <Button
-            mode="elevated"
-            buttonColor={"#fe0009"}
-            labelStyle={{
-              fontSize: 14,
-              textAlign: "center",
-              color: "white",
-              fontFamily: "PoppinsBold",
-            }}
-            style={{
-              borderRadius: 5,
-              width: 250,
-              height: 40,
-              alignSelf: "center",
-              marginTop: -60,
-            }}
-            onPress={() => setModalVisible(true)}
-          >
-            REQUEST BLOOD DONATION
-          </Button>
-          <View
-            style={{
-              borderColor: "#918F8F",
-              width: 330,
-              height: 200,
-              marginTop: 30,
-              borderWidth: 0.5,
-              justifyContent: "center",
-              alignSelf: "center",
-              backgroundColor: "white",
-              marginVertical: 10,
-            }}
-          >
+      <FlatList
+      backgroundColor="#ccc"
+        data={posts}
+        ListHeaderComponent={() => (
+          <View>
             <Image
-              source={testlogo}
+              source={banner}
               style={{
-                height: 50,
-                width: 270,
+                height: 150,
+                width: 360,
+                zIndex: -1,
                 alignSelf: "center",
-                marginVertical: 10,
+                resizeMode: "cover",
               }}
             />
-            <Text
-              style={{
-                textAlign: "center",
-                fontFamily: "Poppins",
-                marginHorizontal: 40,
-              }}
-            >
-              Check if you're eligible to donate blood with RapidPass®.
-            </Text>
             <Button
               mode="elevated"
               buttonColor={"#fe0009"}
@@ -216,56 +207,113 @@ const Home = () => {
                 fontSize: 14,
                 textAlign: "center",
                 color: "white",
-                fontFamily: "Poppins",
+                fontFamily: "PoppinsBold",
               }}
               style={{
                 borderRadius: 5,
                 width: 250,
                 height: 40,
                 alignSelf: "center",
-                marginVertical: 10,
+                marginTop: -60,
+              }}
+              onPress={() => setModalVisible(true)}
+            >
+              REQUEST BLOOD DONATION
+            </Button>
+            <View
+              style={{
+                borderColor: "#918F8F",
+                width: "100%",
+                height: 180,
+                borderWidth: 0.5,
+                marginTop: 26,
+                justifyContent: "center",
+                alignSelf: "center",
+                backgroundColor: "white",
+                marginVertical: 5,
               }}
             >
-              START
-            </Button>
+              <Image
+                source={testlogo}
+                style={{
+                  height: 30,
+                  width: 230,
+                  alignSelf: "center",
+                  marginVertical: 10,
+                }}
+              />
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontFamily: "Poppins",
+                  marginHorizontal: 40,
+                  fontSize: 12,
+                }}
+              >
+                Check if you're eligible to donate blood with RapidPass®.
+              </Text>
+              <Button
+                mode="elevated"
+                buttonColor={"#fe0009"}
+                labelStyle={{
+                  fontSize: 14,
+                  textAlign: "center",
+                  color: "white",
+                  fontFamily: "PoppinsBold",
+                }}
+                style={{
+                  borderRadius: 5,
+                  width: 250,
+                  height: 40,
+                  alignSelf: "center",
+                  marginVertical: 10,
+                }}
+              >
+                START
+              </Button>
+            </View>
           </View>
-        </View>
+        )}
+        renderItem={({ item }) => <PostCard post={item} />}
+        keyExtractor={(item) => item.request_id ? item.request_id.toString() : 'default_key'}
+        ListFooterComponent={() => (
+          posts.length === 0 && (
+            <View
+              style={{
+                borderColor: "#918F8F",
+                borderWidth: 0.5,
+                width: 330,
+                height: 180,
+                marginTop: 5,
+                justifyContent: "center",
+                alignSelf: "center",
+                backgroundColor: "white",
+              }}
+            >
+              <Image
+                source={nopost}
+                style={{
+                  height: 100,
+                  width: 100,
+                  alignSelf: "center",
+                  marginVertical: 10,
+                }}
+              />
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontFamily: "Poppins",
+                  marginTop: -5,
+                  color: "gray",
+                }}
+              >
+                No blood requests at the moment...
+              </Text>
+            </View>
+          )
+        )}
+      />
 
-        {/* No Post Section */}
-        <View
-          style={{
-            borderColor: "#918F8F",
-            borderWidth: 0.5,
-            width: 330,
-            height: 180,
-            marginTop: 5,
-            justifyContent: "center",
-            alignSelf: "center",
-            backgroundColor: "white",
-          }}
-        >
-          <Image
-            source={nopost}
-            style={{
-              height: 100,
-              width: 100,
-              alignSelf: "center",
-              marginVertical: 10,
-            }}
-          />
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: "Poppins",
-              marginTop: -5,
-              color: "gray",
-            }}
-          >
-            No blood requests at the moment...
-          </Text>
-        </View>
-
-        {/* Modal for Request Form */}
         <Modal
           animationType="slide"
           transparent={false}
@@ -312,9 +360,6 @@ const Home = () => {
                 value={recipientName}
                 onChangeText={setRecipientName}
               />
-              <HelperText type="error" visible={!recipientName}>
-                Recipient name is required.
-              </HelperText>
 
               <Text style={{ marginBottom: 5, fontFamily: "Poppins" }}>
                 Blood Type
@@ -608,7 +653,6 @@ const Home = () => {
             </ScrollView>
           </SafeAreaView>
         </Modal>
-      </ScrollView>
     </SafeAreaView>
   );
 };
