@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 import { FontAwesome5 } from "@expo/vector-icons";
 import {supabase} from "../utils/supabase";
 
-const Device = () => {
+const Blood = () => {
   const router = useRouter();
   const [logoSize, setLogoSize] = useState(150);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
@@ -142,7 +142,7 @@ const Device = () => {
   );
 };
 
-export default Device;
+export default Blood;
 
 const typeStyle = StyleSheet.create({
   ...styles,

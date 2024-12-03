@@ -194,7 +194,7 @@ const Home = () => {
               source={banner}
               style={{
                 height: 150,
-                width: 360,
+                width: "100%",
                 zIndex: -1,
                 alignSelf: "center",
                 resizeMode: "cover",
@@ -231,6 +231,11 @@ const Home = () => {
                 alignSelf: "center",
                 backgroundColor: "white",
                 marginVertical: 5,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+                shadowRadius: 5,
+                elevation: 5,
               }}
             >
               <Image
