@@ -154,7 +154,7 @@ const Login = () => {
                         <View style={{ alignItems: 'center' }}>
                             <Button
                                 mode="elevated"
-                                onPress={() => router.push('register')}
+                                onPress={() => router.push('portal')}
                                 buttonColor="#1dc5fd"
                                 labelStyle={{
                                     fontSize: 18,
