@@ -26,45 +26,12 @@ export default function DrawerContent(props) {
             >
                 <Image 
                     source={require('../../assets/drawerlogo.png')} 
-                    style={{ height: 50, width: 200, alignSelf: 'center', marginTop: 15 }} 
+                    style={{ height: 50, width: 200, alignSelf: 'left', marginTop: 15 }} 
                 />
-                <TouchableOpacity 
-                    style={[styles.container, { justifyContent: "center", alignItems: "center", marginTop: 15, marginBottom: -10, borderRadius: 10}]} 
-                    onPress={handleProfile}
-                >
-                    <Image
-                        source={require('../../assets/myprofile.png')} 
-                        style={styles.avatar}
-                    />
-                    <View style={styles.textContainer}>
-                        <Text
-                            style={styles.name}
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                        >
-                            Alaiza Rose Olores
-                        </Text>
-                        <Text
-                            style={styles.email}
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                        >
-                            olores.alaiza88@gmail.com
-                        </Text>
-                    </View>
-                </TouchableOpacity>
-                <View
-                    style={{
-                        justifyContent: "center",
-                        alignItems: "center",
-                        paddingTop: 5,
-                        paddingBottom: 20
-                    }}
-                >
-                </View>
+
                 <DrawerItemList {...props} />
                 <DrawerItem
-                    label="LOG OUT"
+                    label="Log Out"
                     icon={({ color, size }) => (
                         <MaterialCommunityIcons name='logout' color={color} size={size} />
                     )}
