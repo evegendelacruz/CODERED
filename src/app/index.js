@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from "../../src/styles/styles";
 import { TextInput, Button } from 'react-native-paper';
 import { useRouter } from 'expo-router';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { supabase } from "../utils/supabase";
 
 const Login = () => {
