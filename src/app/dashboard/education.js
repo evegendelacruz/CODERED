@@ -38,6 +38,20 @@ const Education = () => {
     { name: "Hepatitis B Immune Globulin", alias: "HBIG", time: "3 months" },
   ];
 
+  const HIVdata = [
+    { name: "Truvada", alias: "emtricitabine and tenofovir disoproxil fumarate", time: "3 months" },
+    { name: "Descovy", alias: "emtricitabine and tenofovir alafenamide", time: "3 months" },
+    { name: "Apretude", alias: "cabotegravir", time: "2 years" },
+    { name: "Erivedge", alias: "vismodegib", time: "2 years" },
+    { name: "Odomzo", alias: "sonidegib", time: "2 years" },
+    { name: "Aubagio", alias: "teriflunomide", time: "2 years" },
+    { name: "Arava", alias: "leflunomide", time: "2 years" },
+    { name: "Soriatane", alias: "acitretin", time: "3 years" },
+    { name: "Tegison", alias: "etretinate", time: "Ever" },
+    { name: "Any medication to treat HIV. May also be called antiretroviral therapy (ART)", time: "Ever" },
+    { name: "Experimental Medication", time: "12 Months" },
+  ];
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
@@ -560,6 +574,57 @@ const Education = () => {
     <View>
       <Text style={[styles.title, {fontSize: 16,}]}> HIV Prevention ( also known as PrEP and PEP) </Text>
     </View>
+
+    <View style={[styles.table, {marginBottom: 30}]}>
+
+        <View style={[styles.row, styles.headerRow]}>
+          <Text style={[styles.cell, styles.headerCell]}>or have taken...</Text>
+          <Text style={[styles.cell, styles.headerCell]}>any time in the last...</Text>
+        </View>
+
+        {/* HIV Data Rows */}
+      {HIVdata.map((item, index) => (
+      <View key={index} style={[styles.row, index % 2 === 0 ? styles.evenRow : styles.oddRow]}>
+
+        <View style={styles.cell}>
+
+          <Text style={styles.itemName}>{item.name} </Text>
+
+        {item.alias ? (
+          <Text style={styles.itemAlias}>which is also called {item.alias}</Text>
+          ) : (
+          item.name === "Any medication to treat HIV. May also be called antiretroviral therapy (ART)" ||
+          item.name === "Experimental Medication" ? null : ( <Text style={styles.itemAlias}> </Text> )
+          )}
+
+        </View>
+
+      <Text style={styles.cell}>{item.time}</Text>
+
+      </View>
+        ))}
+        
+    </View>
+
+        <Text style={[styles.text3, { fontSize: 11.5}]}>
+          DO NOT STOP TAKING ANY PRESCRIBED MEDICATIONS IN ORDER TO DONATE BLOOD, INCLUDING PrEP and PEP MEDICATIONS
+        </Text>
+
+        <Text style={[styles.text, {fontSize: 13}]}>
+          <Text style={{ fontWeight: "bold" }}>Anti-platelet agents affect platelet function</Text>, so people taking these drugs should not donate platelets
+          for the indicated time. You may still be able to donate whole blood or red blood cells by apheresis.
+        </Text>
+
+        <Text style={[styles.text, {fontSize: 13}]}>
+          <Text style={{ fontWeight: "bold" }}>Anticoagulants or "blood thinners"</Text> are used to treat or prevent blood clots in the legs, lungs,
+          or other parts of the body, and to prevent strokes. These medications affect the blood’s ability to clot, which might cause excessive bruising
+          or bleeding when you donate; You may still be able to donate whole blood or red blood cells by apheresis.
+        </Text>
+
+        <Text style={[styles.text, {fontSize: 13}]}>
+          <Text style={{ fontWeight: "bold" }}>Isotretinoin, finasteride, dutasteride acitretin and etretinate</Text> can cause birth defects. Your donated blood
+          could contain high enough levels to damage the unborn baby if transfused to a pregnant woman.
+        </Text>
 
       </ScrollView>
     </SafeAreaView>
