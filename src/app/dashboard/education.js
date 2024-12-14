@@ -412,7 +412,8 @@ const Education = () => {
           </Text>
 
           <Text style={[styles.text2, {fontSize: 10.5}]}>
-            • You will be notified by mail; the notification letter will not say anything about your pregnancy history. You will be asked to stop donating plasma or platelets by apheresis.
+            • You will be notified by mail; the notification letter will not say anything about your pregnancy history.
+            You will be asked to stop donating plasma or platelets by apheresis.
           </Text>
 
           <Text style={[styles.text3, {fontSize: 10.5, marginTop: 7}]}>
@@ -428,7 +429,8 @@ const Education = () => {
           </Text>
 
           <Text style={styles.text}>
-            If you are a regular donor and you have been pregnant in the past, please continue to donate on a regular schedule at this time. Not all individuals who have been pregnant develop HLA antibodies, and your help is needed to supply life-giving blood products to the patients who depend on us.
+            If you are a regular donor and you have been pregnant in the past, please continue to donate on a regular schedule at this time.
+            Not all individuals who have been pregnant develop HLA antibodies, and your help is needed to supply life-giving blood products to the patients who depend on us.
           </Text>
         </View>
 
@@ -441,12 +443,15 @@ const Education = () => {
         <View style={styles.contentContainer}>
 
           <Text style={[styles.text, { fontSize: 10}]}>
-            The American Red Cross mission is to provide a safe and effective blood supply. As part of this mission, the American Red Cross may conduct research. We conduct some research with other institutions, such as academic centers, government agencies, and biomedical companies. Research is an important aspect of our commitment to donor and recipient safety.
+            The American Red Cross mission is to provide a safe and effective blood supply. As part of this mission,
+            the American Red Cross may conduct research. We conduct some research with other institutions, such as academic centers, government agencies,
+            and biomedical companies. Research is an important aspect of our commitment to donor and recipient safety.
           </Text>
 
         <Text style={styles.subtitle}>How might your blood or information be used in medical research?</Text>
           <Text style={[styles.text, { fontSize: 10}]}>
-            We may store and use a portion of your blood or information collected at the time of donation for research studies. Some examples of the types of research are studies related to
+            We may store and use a portion of your blood or information collected at the time of donation for research studies.
+            Some examples of the types of research are studies related to
           </Text>
 
           <Text style={[styles.text2, {fontSize: 10.5}]}>
@@ -458,12 +463,15 @@ const Education = () => {
           </Text>
 
           <Text style={styles.text}>
-            You will not receive any direct benefit from any research. It is possible that the research may benefit commercial interests. Blood components not needed by patients may be provided to institutions for medical or scientific research. You will not be notified as to the use of your blood or donor information when it is used for research.
+            You will not receive any direct benefit from any research. It is possible that the research may benefit commercial interests.
+            Blood components not needed by patients may be provided to institutions for medical or scientific research.
+            You will not be notified as to the use of your blood or donor information when it is used for research.
           </Text>
 
         <Text style={styles.subtitle}>How is your confidentiality protected when your blood or information is used in research?</Text>
           <Text style={[styles.text2, {fontSize: 10.5}]}>
-            • Research participation will not involve any cost, time, or additional procedures beyond the normal donation process. The risk of the research use of your sample or information is loss of confidentiality. Protections are in place to minimize this risk.
+            • Research participation will not involve any cost, time, or additional procedures beyond the normal donation process.
+            The risk of the research use of your sample or information is loss of confidentiality. Protections are in place to minimize this risk.
           </Text>
 
           <Text style={[styles.text2, {fontSize: 10.5, marginBottom: 30}]}>
@@ -483,7 +491,8 @@ const Education = () => {
           </Text>
 
           <Text style={[styles.text2, {fontSize: 10.5, marginBottom: 30}]}>
-            • We will notify you in person, by phone, by letter, or electronically about any test results that are identified to you and that may impact your health, and we may invite you to participate in a follow-up study.
+            • We will notify you in person, by phone, by letter, or electronically about any test results that are identified to you and that may impact your health,
+            and we may invite you to participate in a follow-up study.
           </Text>
 
         <Text style={styles.subtitle}>What will happen if your sample or information is stored?</Text>
@@ -492,7 +501,8 @@ const Education = () => {
           </Text>
 
           <Text style={[styles.text2, {fontSize: 10.5}]}>
-            • Your identified sample and information will not be used for research unrelated to donor safety, blood safety and/or blood product efficacy, and contributions to public health without your consent.
+            • Your identified sample and information will not be used for research unrelated to donor safety, blood safety and/or blood product efficacy, 
+              and contributions to public health without your consent.
           </Text>
 
           <Text style={[styles.text2, {fontSize: 10.5, marginBottom: 30}]}>
@@ -501,7 +511,8 @@ const Education = () => {
 
         <Text style={styles.subtitle}>What are your rights?</Text>
           <Text style={[styles.text2, {fontSize: 10.5}]}>
-            • If you decide that you do not want your donation to be used for research, you will not be able to donate today. It is very important to include blood donors and their donations in possible research studies to continue to provide a safe and effective blood supply.
+            • If you decide that you do not want your donation to be used for research, you will not be able to donate today. 
+            It is very important to include blood donors and their donations in possible research studies to continue to provide a safe and effective blood supply.
           </Text>
 
           <Text style={[styles.text2, {fontSize: 10.5}]}>
@@ -513,7 +524,8 @@ const Education = () => {
           </Text>
 
           <Text style={[styles.text2, {fontSize: 10.5, marginBottom: 30}]}>
-            • If you have any questions about the storage and use of your sample or information or you decide that you do not want your sample or information to be stored for research, contact the Scientific Support Office at (866) 771-5534. However, test information collected before your withdrawal may still be used after your withdrawal.
+            • If you have any questions about the storage and use of your sample or information or you decide that you do not want your sample or information to be stored for research,
+            contact the Scientific Support Office at (866) 771-5534. However, test information collected before your withdrawal may still be used after your withdrawal.
           </Text>
 
         <Text style={styles.subtitle}>How to obtain more information</Text>
@@ -625,6 +637,131 @@ const Education = () => {
           <Text style={{ fontWeight: "bold" }}>Isotretinoin, finasteride, dutasteride acitretin and etretinate</Text> can cause birth defects. Your donated blood
           could contain high enough levels to damage the unborn baby if transfused to a pregnant woman.
         </Text>
+
+        <Text style={[styles.text, {fontSize: 13}]}>
+          <Text style={{ fontWeight: "bold" }}>Thalomid (thalidomide), Revlimid (lenalidomide) Erivedge (Vismodegib), Odomzo (sonidegib), Aubagio (teriflunomide), and Rinvoq (upadacitinib)</Text> may cause
+          birth defects or the death of an unborn baby if transfused to a pregnant woman.
+        </Text>
+
+        <Text style={[styles.text, {fontSize: 13}]}>
+          <Text style={{ fontWeight: "bold" }}>Cellcept (mycophenolate mofetil) and Arava (leflunomide)</Text> are immunosuppressants that may cause birth defects or the death of an unborn
+          baby if transfused to a pregnant woman.
+        </Text>
+
+        <Text style={[styles.text, {fontSize: 13}]}>
+          <Text style={{ fontWeight: "bold" }}>PrEP or pre-exposure prophylaxis</Text> involves taking a specific combination of oral medicines (short-acting antiviral PrEP) or injections
+          (long-acting antiviral PrEP) as a prevention method for people who are HIV negative and at high risk of HIV infection. FDA has determined that the available data
+          demonstrate that the use of PrEP or PEP may delay the detection of HIV by currently licensed screening tests for blood donations, potentially resulting in false negative results
+          in infected individuals. Although “Undetectable = Untransmittable” for sexual transmission, this does not apply to transfusion transmission.
+        </Text>
+
+        <Text style={[styles.text, {fontSize: 13}]}>
+          <Text style={{ fontWeight: "bold" }}>PEP or post-exposure prophylaxis</Text> is a short-acting treatment started as soon as possible after a high-risk exposure
+          to HIV to reduce the risk of infection. FDA has determined that the available data demonstrate that the use of PrEP or PEP may delay the detection of HIV by currently licensed
+          screening tests for blood donations, potentially resulting in false negative results in infected individuals. Although “Undetectable = Untransmittable” for sexual transmission,
+          this does not apply to transfusion transmission.
+        </Text>
+
+        <Text style={[styles.text, {fontSize: 13}]}>
+          <Text style={{ fontWeight: "bold" }}>ART or antiretroviral therapy</Text> is the use of a combination of HIV medicines (called an HIV regimen) to treat HIV infection.
+          HIV infection requires a permanent deferral despite treatment with ART. Antiretroviral drugs do not fully eliminate the virus from the body, and donated blood from individuals
+          infected with HIV taking ART can potentially still transmit HIV to a transfusion recipient. Although “Undetectable = Untransmittable” for sexual transmission,
+          this does not apply to transfusion transmission.
+        </Text>
+
+        <Text style={[styles.text, {fontSize: 13}]}>
+          <Text style={{ fontWeight: "bold" }}>Hepatitis B Immune Globulin (HBIG)</Text> is an injected material used to prevent hepatitis B infection
+          following a possible or known exposure to hepatitis B. HBIG does not prevent hepatitis B infection in every case, therefore, persons who have
+          received HBIG must wait to donate blood.
+        </Text>
+
+        <Text style={[styles.text, {fontSize: 13}]}>
+          <Text style={{ fontWeight: "bold" }}>Experimental Medications</Text> are usually associated with a research study,
+          and the effect on their safety of transfused blood is unknown.
+        </Text>
+
+      
+      <View>
+        <Text style={styles.title}>
+        Important Information Regarding a Hepatitis A Outbreak
+        </Text>
+      </View>
+
+        <Text style={styles.subtitle}>
+        Thank you for coming in to donate today.
+        </Text>
+
+        <Text style={styles.text3}>
+        If you have been exposed to hepatitis A or advised
+        to be vaccinated for hepatitis A because of an
+        exposure at a restaurant or other food establishment,
+        please do not donate today and refrain from donating for 4 months.
+        </Text>
+
+        <Text style={[styles.text3, { fontSize: 10}]}>
+          DO NOT DONATE TODAY.
+        </Text>
+
+          <Text style={[styles.text2, {fontSize: 10.5}]}>
+            • We regard you as having been exposed to a hepatitis A outbreak.
+          </Text>
+
+          <Text style={[styles.text2, {fontSize: 10.5, marginBottom: 30}]}>
+            • Please wait for four months after you ate or drank at this location before coming again to donate.
+          </Text>
+
+        <Text style={styles.text}>
+         For more information about a Hepatitis A outbreak and any precautions you need to take, please contact your local health department.
+        </Text>
+
+      <View>
+        <Text style={[styles.title, {fontSize: 42}]}>
+        Fact Sheet: Check Your Race
+        </Text>
+      </View>
+
+        <Text style={[styles.text, {fontSize: 10}]}>
+          <Text style={{ fontWeight: "bold" }}>Check your race during your health history today</Text> – and know you
+          could be helping individuals with sickle cell disease and rare blood types.
+        </Text>
+
+      <Text style={styles.title}>
+      Blood types can be specific to race.
+      </Text>
+
+        <Text style={styles.text}>
+        Red blood cells carry markers called antigens on their surface that determine one’s blood type. Most are one of the
+        following categories: A, B, AB, and O. There are more than 600 known antigens, and some are unique to specific racial and ethnic groups.
+        For example, many African Americans and people of African descent have rare blood types, such as types U negative and Duffy negative.
+        Patients who have rare blood types or receive frequent blood transfusions need close blood type matches.
+        </Text>
+
+        <Text style={styles.text}>
+        The Red Cross asks all donors to provide their race during the health history process.
+        Selecting your race will notify our laboratories to conduct extra screening. The laboratories screen
+        to determine if your blood donations can help people with sickle cell disease or rare blood types.
+        The most compatible blood for patients with sickle cell disease or those with rare blood types
+        often comes from donors of the same race or similar ethnicity.
+        </Text>
+
+      <Text style={styles.title}>
+      Increasing the number of blood donors from all racial and ethnic groups is vital.
+      </Text>
+
+        <Text style={styles.text}>
+        Blood that is closely matched between donor and patient can lower the risk of patients developing complications. This is especially important for those
+        receiving ongoing blood transfusions. If a patient receives a transfusion that isn’t an exact match to their blood type, they develop antibodies to the foreign antigens.
+        If the patient receives another transfusion in the future with the same mismatch, it can be fatal. It is vital that our blood supply reflects the diversity of our population to best meet the needs of all.
+        Blood donations are constantly needed to help people with complicated childbirths, those battling cancer, people with chronic health conditions such as sickle cell disease,
+        those with traumatic injuries from accidents, and many more.
+        </Text>
+
+      <View>
+        <Text style={[styles.title, {fontSize: 20}]}>
+        You can help the Red Cross provide the most compatible blood to help meet the needs of patients from all backgrounds.
+        </Text>
+      </View>
+
 
       </ScrollView>
     </SafeAreaView>
