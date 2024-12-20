@@ -86,6 +86,7 @@ const styles = ScaledSheet.create({
     width: '100%',
     height: '200@vs',
   },
+
 });
 
 export default styles;

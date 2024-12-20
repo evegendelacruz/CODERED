@@ -232,7 +232,7 @@ const Register = () => {
               onChangeText={setFirstName}
               style={[
                 registerStyle.textInput, 
-                { fontFamily: "PoppinsBold", width: '75%', marginBottom: 8, alignSelf: 'center' }
+                { fontFamily: "PoppinsBold", width: '100%', marginBottom: 8, alignSelf: 'center' }
               ]}
             />
             <TextInput
@@ -245,7 +245,7 @@ const Register = () => {
               onChangeText={setmiddleName}
               style={[
                 registerStyle.textInput, 
-                { fontFamily: "PoppinsBold", width: '75%', alignSelf: 'center' } // Adjust width as needed
+                { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center' } // Adjust width as needed
               ]}
             />
           </View>
@@ -259,7 +259,7 @@ const Register = () => {
             outlineColor="red"
             textColor="red"
             onChangeText={setLastName}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '75%', flex: 1, alignSelf: 'center' }]}/>
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', flex: 1, alignSelf: 'center' }]}/>
           </View>
 
           <View style={{
@@ -267,7 +267,7 @@ const Register = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '75%',
+            width: '100%',
             alignSelf: 'center'
           }}>
             <Picker
@@ -294,7 +294,7 @@ const Register = () => {
               textColor="red"
               editable={false}
               right={<TextInput.Icon icon={"calendar"} color="red" />}
-              style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '75%', alignSelf: 'center' }]}/>
+              style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center' }]}/>
           </TouchableOpacity>
 
           {showDatePicker && (
@@ -315,7 +315,7 @@ const Register = () => {
             textColor="red"
             keyboardType="numeric"
             onChangeText={handlePhoneNumberChange}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '75%', alignSelf: 'center'}]}
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center'}]}
             left={<TextInput.Affix text="+63" />}
             maxLength={10}
             editable
@@ -331,7 +331,7 @@ const Register = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '75%',
+            width: '100%',
             alignSelf: 'center'
           }}>
           <Picker
@@ -350,7 +350,7 @@ const Register = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '75%',
+            width: '100%',
             alignSelf: 'center'
           }}>
           <Picker
@@ -369,7 +369,7 @@ const Register = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '75%',
+            width: '100%',
             alignSelf: 'center'
           }}>
           
@@ -389,7 +389,7 @@ const Register = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '75%',
+            width: '100%',
             alignSelf: 'center'
           }}>
           <Picker
@@ -491,7 +491,7 @@ const Register = () => {
             textColor="red"
             keyboardType="numeric"
             onChangeText={setZipcode}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '75%', alignSelf: 'center'}]}
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center'}]}
           />
 
           <TextInput
@@ -502,7 +502,7 @@ const Register = () => {
             outlineColor="red"
             textColor="red"
             onChangeText={setCurrentAddress}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '75%', alignSelf: 'center'}]}
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center'}]}
           />
 
           <TextInput
@@ -513,7 +513,7 @@ const Register = () => {
             outlineColor="red"
             textColor="red"
             onChangeText={handleEmailChange}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '75%', alignSelf: 'center'}]}/>
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center'}]}/>
             
             {emailError && (
             <Text style={{ color: 'black', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
@@ -531,7 +531,7 @@ const Register = () => {
             secureTextEntry={!isPasswordVisible}
             onChangeText={setPassword}
             right={<TextInput.Icon icon={isPasswordVisible ? "eye-off" : "eye"} color="red" onPress={togglePasswordVisibility} />}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '75%', alignSelf: 'center'}]}
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center'}]}
           />
           <TextInput
             label="CONFIRM PASSWORD"
@@ -543,7 +543,7 @@ const Register = () => {
             secureTextEntry={!isConfirmPasswordVisible}
             onChangeText={setConfirmPassword}
             right={<TextInput.Icon icon={isConfirmPasswordVisible ? "eye-off" : "eye"} color="red" onPress={toggleConfirmPasswordVisibility} />}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '75%', alignSelf: 'center'}]}
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center'}]}
           />
           {password !== confirmPassword && confirmPassword.length > 0 && (
             <Text style={{ color: 'black', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
