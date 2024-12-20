@@ -3,7 +3,7 @@ import { StyleSheet, Text, ScrollView, Image, View, TouchableOpacity, Platform }
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { TextInput, Button, Checkbox,  } from "react-native-paper";
 import { useRouter } from 'expo-router'; 
-import styles from "../styles/styles";
+import styles from "../../src/styles/styles";
 import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {supabase} from "../utils/supabase";
