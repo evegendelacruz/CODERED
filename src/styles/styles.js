@@ -26,7 +26,7 @@ const styles = ScaledSheet.create({
     fontSize: '14@s',
     alignSelf: 'center',
     textAlign: 'center',
-    marginTop: '10@vs',
+    marginTop: '1@vs',
     marginHorizontal: '50@s',
   },
 
