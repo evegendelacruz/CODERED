@@ -125,10 +125,11 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 8,
     elevation: 2,
-
   },
   notificationRead: {
     backgroundColor: '#f0f0f0',
+    borderColor: 'gray',
+    borderWidth: 0.2,
   },
   iconContainer: { justifyContent: 'center', alignItems: 'center', marginRight: 12 },
   iconPlaceholder: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
