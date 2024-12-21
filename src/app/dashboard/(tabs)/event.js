@@ -6,42 +6,42 @@ import {
   Text,
   TouchableOpacity,
   Modal,
-  Button,
   Dimensions,
   ScrollView,
 } from 'react-native';
-import { TextInput } from "react-native-paper";
+import { TextInput } from 'react-native-paper';
 import { Calendar } from 'react-native-calendars';
 import { Ionicons } from '@expo/vector-icons';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const { width } = Dimensions.get('window');
 
 const Event = () => {
-  const [eventTitle, setEventTitle] = useState("");
-  const [location, setLocation] = useState("");
-  const [time, setTime] = useState("");
-  const [information, setInformation] = useState("");
+  const [eventTitle, setEventTitle] = useState('');
+  const [location, setLocation] = useState('');
+  const [description, setDescription] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
-  const [schedule, setSchedule] = useState('');
   const [events, setEvents] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleAddEvent = () => {
-    if (!selectedDate || !schedule) {
-      alert('Please select a date and enter an event!');
+    if (!selectedDate || !eventTitle || !location || !description) {
+      alert('Please fill all fields and select a date!');
       return;
     }
 
-    // Update events state with new event for selected date
+    // Update events state with the new event
     setEvents((prevEvents) => ({
       ...prevEvents,
       [selectedDate]: [
         ...(prevEvents[selectedDate] || []),
-        { schedule, date: selectedDate },
+        { title: eventTitle, location, description, date: selectedDate },
       ],
     }));
 
-    setSchedule('');
+    setEventTitle('');
+    setLocation('');
+    setDescription('');
     setModalVisible(false);
   };
 
@@ -49,9 +49,7 @@ const Event = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.container}>
         <View>
-          <Text style={styles.headerText}>
-            BLOOD DRIVE CALENDAR
-          </Text>
+          <Text style={styles.headerText}>BLOOD DRIVE CALENDAR</Text>
         </View>
 
         <Calendar
@@ -63,10 +61,7 @@ const Event = () => {
               selectedTextColor: 'white',
             },
           }}
-          onDayPress={(day) => {
-            const dateString = day.dateString;
-            setSelectedDate(dateString);
-          }}
+          onDayPress={(day) => setSelectedDate(day.dateString)}
           theme={{
             textDayFontFamily: 'Poppins',
             textMonthFontFamily: 'Poppins',
@@ -76,28 +71,34 @@ const Event = () => {
 
         <View style={styles.eventsContainer}>
           <Text style={styles.subtitle}>EVENTS</Text>
-          {events[selectedDate] ? (
+          {events[selectedDate] && events[selectedDate].length > 0 ? (
             events[selectedDate].map((event, index) => (
               <View key={index} style={styles.eventItem}>
                 <View style={styles.eventHeader}>
-                  <Ionicons name="add-circle-outline" size={24} color="red" />
-                  <Text style={styles.eventTitle}>{event.schedule}</Text>
+                  <Ionicons name="calendar" size={moderateScale(20)} color="red" />
+                  <Text style={styles.eventTitle}>{event.title}</Text>
                 </View>
-                <Text style={styles.eventDate}>{event.date}</Text>
-                <TouchableOpacity>
-                  <Ionicons name="chevron-down" size={20} color="gray" />
-                </TouchableOpacity>
+                <Text style={styles.eventDate}>Location: {event.location}</Text>
+                <Text style={styles.eventDate}>Description: {event.description}</Text>
+                <Text style={styles.eventDate}>Date: {event.date}</Text>
               </View>
             ))
           ) : (
             <View style={styles.noEventsContainer}>
-              <Text style={{fontFamily:"Poppins"}}>No events for this date.</Text>
+              <Text style={{ fontFamily: 'Poppins' }}>No events for this date.</Text>
             </View>
           )}
         </View>
 
         <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <View style={styles.addButton}>
+          <View
+            style={[
+              styles.addButton,
+              events[selectedDate] && events[selectedDate].length > 0
+                ? styles.addButtonWithEvents
+                : styles.addButtonWithoutEvents,
+            ]}
+          >
             <Text style={styles.addButtonText}>ADD EVENT</Text>
           </View>
         </TouchableOpacity>
@@ -119,8 +120,34 @@ const Event = () => {
               onChangeText={setEventTitle}
               style={styles.input}
             />
-            <Button title="Add Event" onPress={handleAddEvent} />
-            <Button title="Close" onPress={() => setModalVisible(false)} />
+            <TextInput
+              label="DESCRIPTION"
+              value={description}
+              mode="outlined"
+              activeOutlineColor="red"
+              outlineColor="red"
+              textColor="red"
+              onChangeText={setDescription}
+              style={styles.input}
+            />
+            <TextInput
+              label="LOCATION"
+              value={location}
+              mode="outlined"
+              activeOutlineColor="red"
+              outlineColor="red"
+              textColor="red"
+              onChangeText={setLocation}
+              style={styles.input}
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity style={styles.addEventButton} onPress={handleAddEvent}>
+                <Text style={styles.buttonText}>Add Event</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+                <Text style={styles.buttonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </Modal>
       </ScrollView>
@@ -131,35 +158,34 @@ const Event = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    paddingBottom: 20,
+    paddingBottom: verticalScale(20),
+    paddingTop: verticalScale(10),
   },
   headerText: {
     fontFamily: 'PoppinsBold',
-    fontSize: 18,
+    fontSize: moderateScale(18),
     textAlign: 'center',
     color: 'red',
-    marginVertical: 10,
+    marginVertical: verticalScale(10),
   },
   eventsContainer: {
-    marginVertical: 5,
+    marginVertical: verticalScale(5),
     backgroundColor: 'white',
     width: '100%',
-    height: '9%',
+    paddingVertical: verticalScale(10),
   },
   subtitle: {
-    fontSize: 19,
+    fontSize: moderateScale(16),
     color: 'red',
     fontFamily: 'PoppinsBold',
-    justifyContent: 'center',
-    paddingVertical: 10,
-    textAlign: 'left',
-    paddingLeft: 10,
+    paddingVertical: verticalScale(10),
+    paddingLeft: scale(10),
   },
   eventItem: {
-    marginVertical: 8,
-    padding: 16,
+    marginVertical: verticalScale(8),
+    padding: scale(10),
     backgroundColor: '#f9f9f9',
-    borderRadius: 10,
+    borderRadius: scale(5),
     borderWidth: 1,
     borderColor: '#ddd',
   },
@@ -168,39 +194,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   eventTitle: {
-    fontSize: 16,
+    fontSize: moderateScale(14),
     fontWeight: 'bold',
-    marginLeft: 10,
+    marginLeft: scale(10),
     fontFamily: 'Poppins',
   },
   eventDate: {
-    fontSize: 14,
+    fontSize: moderateScale(12),
     color: '#777',
-    marginTop: 5,
+    marginTop: verticalScale(5),
     fontFamily: 'Poppins',
   },
-  noEventsContainer: {
-    backgroundColor: 'white',
-    width: '100%',
-    marginTop: 5,
-    padding: 10,
-    zIndex: -1,
-    height: '300%'
-  },
   addButton: {
-    position: 'absolute',
     alignSelf: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: verticalScale(10),
+    paddingHorizontal: scale(20),
     backgroundColor: 'red',
-    borderRadius: 8,
-    marginTop: 90,
-    width: 300,
-    
+    borderRadius: scale(8),
+    marginTop: verticalScale(20),
+    width: scale(300),
+  },
+  addButtonWithEvents: {
+    backgroundColor: 'red', // Change background color when events are present
+    marginTop: verticalScale(20), // Adjust position if there are events
+  },
+  addButtonWithoutEvents: {
+    backgroundColor: 'red', // Original background color
+    marginTop: verticalScale(20), // Default position
   },
   addButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: moderateScale(14),
     textAlign: 'center',
     fontFamily: 'PoppinsBold',
   },
@@ -210,18 +234,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: moderateScale(16),
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: verticalScale(10),
     fontFamily: 'Poppins',
   },
+  noEventsContainer: {
+    left: scale(30),
+  },
   input: {
-    width: width - 40,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    marginBottom: 20,
+    width: width - scale(40),
+    marginBottom: verticalScale(10),
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+    marginTop: verticalScale(20),
+  },
+  addEventButton: {
+    backgroundColor: 'red',
+    padding: scale(10),
+    borderRadius: scale(5),
+  },
+  closeButton: {
+    backgroundColor: 'gray',
+    padding: scale(10),
+    borderRadius: scale(5),
+  },
+  buttonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontFamily: 'PoppinsBold',
   },
 });
 

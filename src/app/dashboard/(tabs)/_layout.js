@@ -22,13 +22,11 @@ const DashboardLayout = () => {
         headerShown: false,
         tabBarActiveTintColor: 'black',
         tabBarStyle: {
-          height: '11%',
+          height: '10.5%',
           backgroundColor: '#fe0009',
-          justifyContent: 'center',
-          alignItems: 'center',
-          alignSelf: 'center',
+          justifyContent: 'space-between',
           paddingTop: 12,
-          display: isKeyboardVisible ? 'none' : 'flex'
+          display: isKeyboardVisible ? 'none' : 'flex',
         },
         tabBarShowLabel: false, 
       }}
