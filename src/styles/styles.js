@@ -51,7 +51,7 @@ const styles = ScaledSheet.create({
     fontSize: '15@s',
     width: '290@s',
     height: '50@vs',
-    borderWidth: '0', // Removed border
+    borderWidth: 0, 
     margin: '10@vs',
     paddingHorizontal: '10@s',
   },
