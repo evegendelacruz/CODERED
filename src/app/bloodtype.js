@@ -36,7 +36,7 @@ const Blood = () => {
       try {
         // Insert data into Supabase
         const { data, error } = await supabase
-          .from("blood_type") // Adjust the table name if needed
+          .from("blood_type") 
           .insert([
             {
               type_blood_group: selectedBloodGroup,
