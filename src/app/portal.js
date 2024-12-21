@@ -72,7 +72,7 @@ const Portal = ({ navigation }) => {
             paddingVertical: 7,
             paddingHorizontal: 5,
             margin: 10,
-            borderRadius: 7,
+            borderRadius: 50,
             width: 240,
             height: 50,
           }}
@@ -87,8 +87,8 @@ const Portal = ({ navigation }) => {
         <Button
           mode="contained"
           onPress={() => router.push("regorganization")}
-          onPressIn={() => setIsUserPressed(true)}
-          onPressOut={() => setIsUserPressed(false)}
+          onPressIn={() => setIsAdminPressed(true)}
+          onPressOut={() => setIsAdminPressed(false)}
           labelStyle={{
             fontSize: 18,
             textAlign: "center",
@@ -96,11 +96,11 @@ const Portal = ({ navigation }) => {
             fontFamily: "PoppinsBold",
           }}
           style={{
-            backgroundColor: isUserPressed ? "#ff8e92" : "#fe0009",
+            backgroundColor: isAdminPressed ? "#ff8e92" : "#fe0009",
             paddingVertical: 7,
             paddingHorizontal: 5,
             margin: 10,
-            borderRadius: 7,
+            borderRadius: 50,
             width: 240,
             height: 50,
           }}
