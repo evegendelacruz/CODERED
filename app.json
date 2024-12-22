@@ -4,11 +4,11 @@
     "slug": "CodeRed",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/codered.png",
+    "icon": "./assets/Logo.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/Logo.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
@@ -17,12 +17,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/splash.png",
+        "foregroundImage": "./assets/Logo.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/codered.png"
+      "favicon": "./assets/Logo.png"
     },
     "plugins": [
       "expo-font",
