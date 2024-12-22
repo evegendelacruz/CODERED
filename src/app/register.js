@@ -208,18 +208,8 @@ const Register = () => {
         > 
           <Image source={codered} style={[styles.logoImage, { width: 150, height: 150, marginTop: 0 }]} />
           <Text style={[styles.headingTitle, { textAlign: 'center' }]}>
-            Join Us, Pulse!
+            Create an Account
           </Text>
-          <Text style={{
-            color: 'black',
-            fontFamily: 'Poppins',
-            fontSize: 13,
-            alignSelf: 'center',
-            textAlign: 'center',
-            marginTop: 1
-            }}>
-            Join Code Red to help save lives by donating blood or connecting donors with those in urgent need!
-            </Text>
 
             <View style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <TextInput
@@ -228,11 +218,11 @@ const Register = () => {
               mode="outlined"
               activeOutlineColor="red"
               outlineColor="red"
-              textColor="red"
+              textColor="black"
               onChangeText={setFirstName}
               style={[
                 registerStyle.textInput, 
-                { fontFamily: "PoppinsBold", width: '100%', marginBottom: 8, alignSelf: 'center' }
+                { fontFamily: "PoppinsBold", width: '95%', marginBottom: 8, alignSelf: 'center' }
               ]}
             />
             <TextInput
@@ -241,11 +231,11 @@ const Register = () => {
               mode="outlined"
               activeOutlineColor="red"
               outlineColor="red"
-              textColor="red"
-              onChangeText={setmiddleName}
+              textColor="black"
+              onChangeText={(text) => setmiddleName(text.charAt(0))}
               style={[
                 registerStyle.textInput, 
-                { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center' } // Adjust width as needed
+                { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center' } // Adjust width as needed
               ]}
             />
           </View>
@@ -257,9 +247,9 @@ const Register = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             onChangeText={setLastName}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', flex: 1, alignSelf: 'center' }]}/>
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', flex: 1, alignSelf: 'center' }]}/>
           </View>
 
           <View style={{
@@ -267,7 +257,7 @@ const Register = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '100%',
+            width: '95%',
             alignSelf: 'center'
           }}>
             <Picker
@@ -291,10 +281,10 @@ const Register = () => {
               mode="outlined"
               activeOutlineColor="red"
               outlineColor="red"
-              textColor="red"
+              textColor="black"
               editable={false}
               right={<TextInput.Icon icon={"calendar"} color="red" />}
-              style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center' }]}/>
+              style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center' }]}/>
           </TouchableOpacity>
 
           {showDatePicker && (
@@ -312,16 +302,16 @@ const Register = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             keyboardType="numeric"
             onChangeText={handlePhoneNumberChange}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center'}]}
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
             left={<TextInput.Affix text="+63" />}
             maxLength={10}
             editable
           />
           {phoneError && (
-            <Text style={{ color: 'black', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
+            <Text style={{ color: 'red', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
               Invalid Phone Number
             </Text>
           )}
@@ -331,7 +321,7 @@ const Register = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '100%',
+            width: '95%',
             alignSelf: 'center'
           }}>
           <Picker
@@ -350,7 +340,7 @@ const Register = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '100%',
+            width: '95%',
             alignSelf: 'center'
           }}>
           <Picker
@@ -369,7 +359,7 @@ const Register = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '100%',
+            width: '95%',
             alignSelf: 'center'
           }}>
           
@@ -389,7 +379,7 @@ const Register = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '100%',
+            width: '95%',
             alignSelf: 'center'
           }}>
           <Picker
@@ -488,10 +478,10 @@ const Register = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             keyboardType="numeric"
             onChangeText={setZipcode}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center'}]}
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
           />
 
           <TextInput
@@ -500,9 +490,9 @@ const Register = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             onChangeText={setCurrentAddress}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center'}]}
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
           />
 
           <TextInput
@@ -511,12 +501,12 @@ const Register = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             onChangeText={handleEmailChange}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center'}]}/>
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}/>
             
             {emailError && (
-            <Text style={{ color: 'black', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
+            <Text style={{ color: 'red', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
               Invalid Email
             </Text>
           )}
@@ -527,11 +517,11 @@ const Register = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             secureTextEntry={!isPasswordVisible}
             onChangeText={setPassword}
             right={<TextInput.Icon icon={isPasswordVisible ? "eye-off" : "eye"} color="red" onPress={togglePasswordVisibility} />}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center'}]}
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
           />
           <TextInput
             label="CONFIRM PASSWORD"
@@ -539,14 +529,14 @@ const Register = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             secureTextEntry={!isConfirmPasswordVisible}
             onChangeText={setConfirmPassword}
             right={<TextInput.Icon icon={isConfirmPasswordVisible ? "eye-off" : "eye"} color="red" onPress={toggleConfirmPasswordVisibility} />}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '100%', alignSelf: 'center'}]}
+            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
           />
           {password !== confirmPassword && confirmPassword.length > 0 && (
-            <Text style={{ color: 'black', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
+            <Text style={{ color: 'red', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
               Passwords don't match
             </Text>
           )}
@@ -565,13 +555,13 @@ const Register = () => {
 
           <View style={{ alignItems: 'center' }}>
             <Button
-              mode="elevated"
+              mode="contained"
               onPress={handleRegister}
               disabled={isRegisterPressed}
               loading={isLoading}
               buttonColor={isRegisterPressed ? "#ff8e92" : "red"}
               labelStyle={{ fontSize: 18, textAlign: 'center', color: 'white', fontFamily: "PoppinsBold" }} 
-              style={{ paddingVertical: 7, paddingHorizontal: 5, margin: 10, borderRadius: 100, width: 290, height: 50, marginBottom:120, alignSelf: 'center' }}
+              style={{ paddingVertical: 7, paddingHorizontal: 5, margin: 10, borderRadius:5, width: '95%', height: 50, marginBottom:120, alignSelf: 'center' }}
             >
               PROCEED
             </Button>

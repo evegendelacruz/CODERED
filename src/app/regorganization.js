@@ -196,23 +196,13 @@ const Organization = () => {
       <SafeAreaView style={styles.container}>
         <ScrollView 
           style={styles.scrollView} 
-          contentContainerStyle={registerStyle.scrollContent} 
+          contentContainerStyle={registerorgStyle.scrollContent} 
           keyboardShouldPersistTaps="handled" 
         > 
           <Image source={codered} style={[styles.logoImage, { width: 150, height: 150, marginTop: 0 }]} />
           <Text style={[styles.headingTitle, { textAlign: 'center' }]}>
-            Join Us, Pulse!
+            Create an Organization Account
           </Text>
-          <Text style={{
-            color: 'black',
-            fontFamily: 'Poppins',
-            fontSize: 13,
-            alignSelf: 'center',
-            textAlign: 'center',
-            marginTop: 1
-            }}>
-           Join Code Red and make a difference—donate blood or help connect lifesaving donors with those in urgent need. Together, we can create a healthier, stronger community!
-            </Text>
 
           <View style={{ alignItems: 'center' }}>
             <TextInput
@@ -221,9 +211,9 @@ const Organization = () => {
                 mode="outlined"
                 activeOutlineColor="red"
                 outlineColor="red"
-                textColor="red"
+                textColor="black"
                 onChangeText={setOrgName}
-                style={[registerStyle.textInput, { fontFamily: "PoppinsBold", flex: 1, marginRight: 8 }]}/>
+                style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}/>
           </View>
 
           <View style={{
@@ -231,8 +221,8 @@ const Organization = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '94%',
-            alignSelf: 'center' 
+            width: '95%',
+            alignSelf: 'center'
           }}>
             <Picker
               selectedValue={selectedType}
@@ -252,10 +242,10 @@ const Organization = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             keyboardType="numeric"
             onChangeText={handlePhoneNumberChange}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold" }]}
+            style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
             left={<TextInput.Affix text="+63" />}
             maxLength={10}
             editable
@@ -274,10 +264,10 @@ const Organization = () => {
               mode="outlined"
               activeOutlineColor="red"
               outlineColor="red"
-              textColor="red"
+              textColor="black"
               editable={false}
               right={<TextInput.Icon icon={"calendar"} color="red" />}
-              style={[registerStyle.textInput, { fontFamily: "PoppinsBold" }]}/>
+              style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}/>
           </TouchableOpacity>
 
           {showDatePicker && (
@@ -289,13 +279,13 @@ const Organization = () => {
             />
           )}
 
-        <View style={{
+          <View style={{
             borderWidth: 1, 
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '94%',
-            alignSelf: 'center' 
+            width: '95%',
+            alignSelf: 'center'
           }}>
           <Picker
               selectedValue={selectedCountry}
@@ -313,8 +303,8 @@ const Organization = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '94%',
-            alignSelf: 'center' 
+            width: '95%',
+            alignSelf: 'center'
           }}>
           <Picker
               selectedValue={selectedRegion}
@@ -332,8 +322,8 @@ const Organization = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '94%',
-            alignSelf: 'center' 
+            width: '95%',
+            alignSelf: 'center'
           }}>
           
           <Picker
@@ -352,8 +342,8 @@ const Organization = () => {
             borderColor: 'red', 
             borderRadius: 5, 
             marginVertical: 10,
-            width: '94%',
-            alignSelf: 'center' 
+            width: '95%',
+            alignSelf: 'center'
           }}>
           <Picker
               selectedValue={selectedBarangay}
@@ -451,10 +441,10 @@ const Organization = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             keyboardType="numeric"
             onChangeText={setZipcode}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold" }]}
+            style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
           />
 
           <TextInput
@@ -463,9 +453,9 @@ const Organization = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             onChangeText={setCurrentAddress}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold" }]}
+            style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
           />
 
           <TextInput
@@ -474,9 +464,9 @@ const Organization = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             onChangeText={handleEmailChange}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold" }]}/>
+            style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}/>
             
             {emailError && (
             <Text style={{ color: 'black', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
@@ -490,11 +480,11 @@ const Organization = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             secureTextEntry={!isPasswordVisible}
             onChangeText={setPassword}
             right={<TextInput.Icon icon={isPasswordVisible ? "eye-off" : "eye"} color="red" onPress={togglePasswordVisibility} />}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold" }]}
+            style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
           />
           <TextInput
             label="CONFIRM PASSWORD"
@@ -502,11 +492,11 @@ const Organization = () => {
             mode="outlined"
             activeOutlineColor="red"
             outlineColor="red"
-            textColor="red"
+            textColor="black"
             secureTextEntry={!isConfirmPasswordVisible}
             onChangeText={setConfirmPassword}
             right={<TextInput.Icon icon={isConfirmPasswordVisible ? "eye-off" : "eye"} color="red" onPress={toggleConfirmPasswordVisibility} />}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold" }]}
+            style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
           />
           {password !== confirmPassword && confirmPassword.length > 0 && (
             <Text style={{ color: 'black', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
@@ -514,34 +504,34 @@ const Organization = () => {
             </Text>
           )}
 
-          <View style={[registerStyle.checkboxContainer, { marginBottom: 2, marginLeft: 3 }]}>
+          <View style={[registerorgStyle.checkboxContainer, { marginBottom: 2, marginLeft: 3 }]}>
             <Checkbox
               status={checked ? 'checked' : 'unchecked'}
               uncheckedColor="red"
               color="red"
               onPress={() => setChecked(!checked)}
             />
-            <Text style={registerStyle.checkboxLabel}>
+            <Text style={registerorgStyle.checkboxLabel}>
               By proceeding,  I consent to the Terms and Conditions and Privacy Policy.
             </Text>
           </View>
 
           <View style={{ alignItems: 'center' }}>
             <Button
-              mode="elevated"
+              mode="contained"
               onPress={handleRegister}
               disabled={isRegisterPressed}
               loading={isLoading}
               buttonColor={isRegisterPressed ? "#ff8e92" : "red"}
               labelStyle={{ fontSize: 18, textAlign: 'center', color: 'white', fontFamily: "PoppinsBold" }} 
-              style={{ paddingVertical: 7, paddingHorizontal: 5, margin: 10, borderRadius: 100, width: 290, height: 50, marginBottom:120 }}
+              style={{ paddingVertical: 7, paddingHorizontal: 5, margin: 10, borderRadius: 5, width: '95%', height: 50, marginBottom:120 }}
             >
               PROCEED
             </Button>
           </View>
 
           <View style={[styles.footerContainer, { position: 'absolute', bottom: 0, left: 0, right: 0, zIndex:-1 }]}>
-            <Image source={footer} style={styles.footerImage} />
+            <Image source={footer} style={registerorgStyle.footerImage} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -551,4 +541,4 @@ const Organization = () => {
 
 export default Organization;
 
-const registerStyle = StyleSheet.create(styles);
+const registerorgStyle = StyleSheet.create(styles);

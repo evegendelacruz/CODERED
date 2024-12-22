@@ -18,6 +18,7 @@ const styles = ScaledSheet.create({
     color: 'red',
     fontFamily: 'PoppinsBold',
     fontSize: '25@s',
+    marginTop: '-10@s',
   },
 
   subheadingTitle: {
@@ -27,14 +28,14 @@ const styles = ScaledSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     marginTop: '1@vs',
-    marginHorizontal: '50@s',
+    marginHorizontal: '40@s',
   },
 
   pageTitle: {
     fontFamily: 'PoppinsBold',
     color: 'red',
     fontSize: '25@s',
-    marginTop: '10@vs',
+    marginTop: '5@vs',
     marginLeft: '-200@s',
     marginBottom: '-10@vs',
   },
@@ -49,7 +50,7 @@ const styles = ScaledSheet.create({
   textInput: {
     fontFamily: 'Poppins',
     fontSize: '15@s',
-    width: '290@s',
+    width: '280@s',
     height: '50@vs',
     borderWidth: 0, 
     margin: '10@vs',
@@ -75,7 +76,7 @@ const styles = ScaledSheet.create({
   },
 
   checkboxLabel: {
-    color: 'red',
+    color: 'black',
     fontFamily: 'Poppins',
     fontSize: '12@s',
     marginLeft: '5@s',
