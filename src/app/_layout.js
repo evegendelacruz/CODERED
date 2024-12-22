@@ -28,6 +28,19 @@ const RootLayout = () => {
             }}
           >
             <Stack.Screen name="index" options={{headerShown: false, }} />
+            <Stack.Screen name="portal" options={{
+              title: 'PORTAL', 
+              headerShown: true,  
+              headerStyle: {
+                backgroundColor: 'red',
+              },
+              headerTintColor: 'white', 
+              headerTitleStyle: {
+                fontFamily: 'PoppinsBold', 
+                fontSize: 20,
+              },
+              headerTitleAlign: 'center', 
+            }} />
             <Stack.Screen name="register" options={{
               title: 'REGISTRATION', 
               headerShown: true,  
@@ -41,6 +54,21 @@ const RootLayout = () => {
               },
               headerTitleAlign: 'center', 
             }} />
+            
+            <Stack.Screen name="regorganization" options={{
+              title: 'REGISTRATION', 
+              headerShown: true,  
+              headerStyle: {
+                backgroundColor: 'red',
+              },
+              headerTintColor: 'white', 
+              headerTitleStyle: {
+                fontFamily: 'PoppinsBold', 
+                fontSize: 20,
+              },
+              headerTitleAlign: 'center', 
+            }} />
+
             <Stack.Screen name="bloodtype" options={{ title: 'BLOOD TYPE', 
             headerShown: true,
             headerStyle: {

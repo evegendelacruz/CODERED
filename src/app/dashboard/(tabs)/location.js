@@ -141,12 +141,11 @@ const Location = () => {
                         flexDirection: "row",
                         alignItems: "center",
                         justifyContent: "flex-start",
-                        borderRadius: 5,
                         width: '100%',
                         backgroundColor: "white",
                         paddingVertical: 10,
                         paddingHorizontal: 10,
-                        marginTop: 10, // Adjusted for better spacing
+                        marginTop: -65, // Adjusted for better spacing
                       }}
                       onPress={() => openMapWithQuery(hospital.address)} // Open map with hospital address
                     >

@@ -1,101 +1,123 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import FontAwesome from 'react-native-vector-icons/FontAwesome6'; // Import FontAwesome6
+import FontAwesome from 'react-native-vector-icons/FontAwesome6';
+import { useRoute, useNavigation } from '@react-navigation/native'; // Import useNavigation
+
+// Function to calculate time difference
+const timeAgo = (timestamp) => {
+  const now = Date.now();
+  const diff = now - timestamp; // Difference in milliseconds
+
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (seconds < 60) {
+    return 'Just Now';
+  } else if (minutes < 60) {
+    return `${minutes} min ago`;
+  } else if (hours < 24) {
+    return `${hours} hr ago`;
+  } else {
+    return `${days} day${days > 1 ? 's' : ''} ago`;
+  }
+};
 
 const Notification = () => {
+  const route = useRoute();
+  const navigation = useNavigation(); // Get navigation prop
+  const { newEvent } = route.params || {}; // Get new event passed from navigation
+  console.log("Received newEvent:", newEvent); // Debug log
+
+  // Manage notifications state
+  const [notifications, setNotifications] = useState([]);
+
+  // Add new events to notifications when they arrive
+  useEffect(() => {
+    if (newEvent) {
+      console.log("Adding new event to notifications:", newEvent); // Debug log
+      setNotifications((prev) => [
+        { id: Date.now(), ...newEvent, timestamp: Date.now(), isRead: false },
+        ...prev,
+      ]);
+    }
+  }, [newEvent]);
+
+  // Mark notifications as read
+  const markAsRead = (id) => {
+    setNotifications((prev) =>
+      prev.map((notification) =>
+        notification.id === id ? { ...notification, isRead: true } : notification
+      )
+    );
+  };
+
+  // Handle notification press
+  const handleNotificationPress = (item) => {
+    markAsRead(item.id); // Mark the notification as read
+    // Navigate to the EventDetails screen and pass the selected event
+    navigation.navigate('event', { selectedEvent: item });
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'lightgray' }}>
-      <View
-        style={{
-          backgroundColor: 'white',
-          height: '8%', // Specific height for this section
-          justifyContent: 'center',
-          alignItems: 'flex-start', // Use alignItems instead of alignContent
-          elevation: 2,
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: 'PoppinsBold',
-            fontSize: 20,
-            color: 'red',
-            paddingLeft: 13,
-          }}
-        >
-          Notifications
-        </Text>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Notifications</Text>
       </View>
 
-      <View style={{ marginVertical: 5 }}>
-        <Text
-          style={{
-            fontFamily: 'Poppins',
-            paddingLeft: 13,
-            fontSize: 15,
-            color: 'gray',
-            elevation: 2,
-          }}
-        >
-          Today
-        </Text>
-      </View>
-
-      <View
-        style={{
-          backgroundColor: 'white',
-          flex: 1, // Allow this section to take the remaining space
-        }}
-      >
-        <View style={styles.container}>
-          {/* Notification 1 */}
-          <TouchableOpacity style={styles.notificationCard}>
-            <View style={styles.iconContainer}>
-              <View style={styles.iconPlaceholder}>
-                <FontAwesome name="droplet" size={20} color="red" />
-              </View>
-            </View>
-            <View style={styles.content}>
-            <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
-              Urgent Blood Donation Request
-            </Text>
-              <Text style={styles.description} numberOfLines={1} ellipsizeMode="tail">
-              Type O- blood is urgently needed at City General Hospital. Please donate if you're available.
-              </Text>
-            </View>
-            <Text style={styles.timestamp}>5h ago</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.notificationCard}>
-            <View style={styles.iconContainer}>
-              <View style={styles.iconPlaceholder}>
-                <FontAwesome name="calendar" size={20} color="red" />
-              </View>
-            </View>
-            <View style={styles.content}>
-            <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
-              Blood Donation Opportunity
-            </Text>
-              <Text style={styles.description} numberOfLines={1} ellipsizeMode="tail">
-              Join us at Limketkai Center on Nov 30, 9 AM to 4 PM. Save lives by donating blood!
-              </Text>
-            </View>
-            <Text style={styles.timestamp}>10h ago</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.container}>
+        {notifications.length > 0 ? (
+          <FlatList
+            data={notifications}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[styles.notificationCard, item.isRead && styles.notificationRead]}
+                onPress={() => handleNotificationPress(item)} // Navigate when pressed
+              >
+                <View style={styles.iconContainer}>
+                  <View style={styles.iconPlaceholder}>
+                    <FontAwesome name="calendar" size={20} color="red" />
+                  </View>
+                </View>
+                <View style={styles.content}>
+                  <Text style={[styles.title, item.isRead && styles.textRead]}>
+                    {item.title}
+                  </Text>
+                  <Text style={[styles.description, item.isRead && styles.textRead]}>
+                    Scheduled on: {item.date}
+                  </Text>
+                </View>
+                <Text style={styles.timestamp}>
+                  {item.isRead ? 'Read' : timeAgo(item.timestamp)}
+                </Text>
+              </TouchableOpacity>
+            )}
+          />
+        ) : (
+          <Text style={styles.noNotifications}>No new notifications</Text>
+        )}
       </View>
     </SafeAreaView>
   );
 };
 
-export default Notification;
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#f5f5f5',
+  header: {
+    backgroundColor: 'white',
+    height: '8%',
+    justifyContent: 'center',
+    elevation: 2,
   },
+  headerText: {
+    fontFamily: 'PoppinsBold',
+    fontSize: 20,
+    color: 'red',
+    paddingLeft: 13,
+  },
+  container: { flex: 1, padding: 16, backgroundColor: '#f1f1f1'  },
   notificationCard: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -104,47 +126,25 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     elevation: 2,
   },
-
-  iconContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  iconPlaceholder: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+  notificationRead: {
     backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: 'gray',
+    borderWidth: 0.2,
   },
-  content: {
-    flex: 1,
-  },
-  title: {
-    fontFamily: 'PoppinsBold',
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 4,
-  },
-  description: {
+  iconContainer: { justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  iconPlaceholder: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
+  content: { flex: 1 },
+  title: { fontFamily: 'PoppinsBold', fontSize: 14, color: '#333', marginBottom: 4 },
+  description: { fontFamily: 'Poppins', fontSize: 12, color: '#666' },
+  textRead: { color: '#aaa' },
+  timestamp: { fontSize: 11, color: '#999', alignSelf: 'center' },
+  noNotifications: {
+    textAlign: 'center',
     fontFamily: 'Poppins',
-    fontSize: 12,
+    fontSize: 16,
     color: '#666',
-    lineHeight: 20,
-  },
-  boldText: {
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  successText: {
-    color: '#28a745',
-    fontWeight: 'bold',
-  },
-  timestamp: {
-    fontSize: 11,
-    color: '#999',
-    alignSelf: 'center',
-    marginTop: -50
+    marginTop: 20,
   },
 });
+
+export default Notification;

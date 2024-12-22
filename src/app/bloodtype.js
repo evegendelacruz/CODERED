@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, Image, View, TouchableOpacity, Keyboard, TextInput, ScrollView } from "react-native";
+import { StyleSheet, Text, Image, View, TouchableOpacity, Keyboard, TextInput, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, PaperProvider } from "react-native-paper";
 import styles from "../styles/styles";
@@ -15,6 +15,7 @@ const Blood = () => {
   const [selectedRhFactor, setSelectedRhFactor] = useState(null);
   const [isRegisterPressed, setIsRegisterPressed] = useState(false);
   const footer = require("../../assets/gradient.png");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", () => {
@@ -32,11 +33,12 @@ const Blood = () => {
   }, []);
 
   const handleSubmit = async () => {
+    setIsLoading(true);
     if (selectedBloodGroup && selectedRhFactor) {
       try {
         // Insert data into Supabase
         const { data, error } = await supabase
-          .from("blood_type") // Adjust the table name if needed
+          .from("blood_type")
           .insert([
             {
               type_blood_group: selectedBloodGroup,
@@ -46,16 +48,20 @@ const Blood = () => {
 
         if (error) {
           console.error("Error inserting data: ", error.message);
+          Alert.alert("Error", "There was an error submitting your data. Please try again.");
         } else {
+          setIsLoading(true);
           console.log("Data inserted successfully: ", data);
+          Alert.alert("Success", "Blood Type Recorded Successfully!");
           
           router.push("/");
         }
       } catch (error) {
         console.error("Error with Supabase operation: ", error.message);
+        Alert.alert("Error", "There was an error processing your request. Please try again.");
       }
     } else {
-      console.log("Please select a blood group and Rh factor.");
+      Alert.alert("Warning", "Please select a blood group and Rh factor.");
     }
   };
 
@@ -121,13 +127,14 @@ const Blood = () => {
 
           <View style={{ alignItems: "center", marginTop: 10, marginBottom: 100 }}>
             <Button
-              mode="elevated"
+              mode="contained"
               onPress={handleSubmit}
               onPressIn={() => setIsRegisterPressed(true)}
               onPressOut={() => setIsRegisterPressed(false)}
               buttonColor={isRegisterPressed ? "red" : "red"}
+              loading={isLoading}
               labelStyle={typeStyle.submitButtonLabel}
-              style={typeStyle.submitButton}
+              style={{ paddingVertical: 7, paddingHorizontal: 5, margin: 10, borderRadius:5, width: '80%', height: 50, alignSelf: 'center' }}
             >
               SUBMIT
             </Button>
@@ -157,8 +164,8 @@ const typeStyle = StyleSheet.create({
   headerTitle: {
     color: "red",
     fontFamily: "Poppins",
-    fontSize: 22,
-    marginHorizontal: 80,
+    fontSize: 20,
+    marginHorizontal: 40,
     marginTop: -15,
   },
   logoImage: {
@@ -180,7 +187,7 @@ const typeStyle = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
     width: "40%",
-    height: 80,
+    height: 75,
     margin: 10,
     backgroundColor: "white",
     borderColor: "red",
@@ -194,7 +201,7 @@ const typeStyle = StyleSheet.create({
     elevation: 5,
   },
   galleryButtonText: {
-    fontSize: 25,
+    fontSize: 22,
     fontFamily: "Poppins",
     color: "red",
   },

@@ -8,16 +8,14 @@ import {Picker} from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {supabase} from "../utils/supabase";
 
-const Register = () => {
+const Organization = () => {
   const router = useRouter();
 
   const codered = require("../../assets/codered.png");
   const footer = require("../../assets/gradient.png");
 
   // State definitions
-  const [firstName, setFirstName] = useState("");
-  const [middleName, setmiddleName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [orgName, setOrgName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [currentAddress, setCurrentAddress] = useState("");
   const [email, setEmail] = useState("");
@@ -34,13 +32,13 @@ const Register = () => {
   const [emailError, setEmailError] = useState(false);
   const [phoneError, setPhoneError] = useState(false);
 
-  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedType, setSelectedType] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedBarangay, setSelectedBarangay] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState(""); // Date of Birth state for the calendar
-  const [showDatePicker, setShowDatePicker] = useState(false); // State to show/hide date picker
+  const [dateStarted, setDateStarted] = useState(""); 
+  const [showDatePicker, setShowDatePicker] = useState(false); 
 
   const handleEmailChange = (input) => {
     setEmail(input);
@@ -66,7 +64,7 @@ const Register = () => {
       const year = selectedDate.getFullYear();
       const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
       const day = selectedDate.getDate().toString().padStart(2, '0');
-      setDateOfBirth(`${month}/${day}/${year}`);
+      setDateStarted(`${month}/${day}/${year}`);
     }
     setShowDatePicker(false);
   };
@@ -77,14 +75,12 @@ const Register = () => {
 
     // Basic Validation - Check if all fields are filled
     if (
-        !firstName ||
-        !middleName ||
-        !lastName ||
+        !orgName ||
         !email ||
         !password ||
         !confirmPassword ||
         !phoneNumber ||
-        !selectedGender ||
+        !selectedType ||
         !selectedCountry ||
         !selectedRegion ||
         !selectedCity ||
@@ -108,9 +104,9 @@ const Register = () => {
 
     try {
       const { data: existingUser, error: checkEmailError } = await supabase
-      .from("user")
-      .select("user_email")
-      .eq("user_email", email)
+      .from("organization")
+      .select("org_email")
+      .eq("org_email", email)
       .maybeSingle();
   
     if (checkEmailError) {
@@ -143,28 +139,25 @@ const Register = () => {
         }
 
         // Step 3: Format Birthdate if provided
-        const formattedBirthdate = dateOfBirth
-            ? new Date(dateOfBirth.split("/").reverse().join("-"))
+        const formattedBirthdate = dateStarted
+            ? new Date(dateStarted.split("/").reverse().join("-"))
                 .toISOString()
                 .split("T")[0]
             : null;
 
-        // Step 4: Prepare user data payload (no need to include user_id since it's auto-generated)
         const payload = {
-            user_firstname: firstName,
-            user_middlename: middleName,
-            user_lastname: lastName,
-            user_gender: selectedGender,
-            user_birthdate: formattedBirthdate,
-            user_phoneNumber: phoneNumber,
-            user_country: selectedCountry,
-            user_region: selectedRegion,
-            user_city: selectedCity,
-            user_barangay: selectedBarangay,
-            user_zipcode: zipcode,
-            user_currentAddress: currentAddress,
-            user_email: email, 
-            user_password: password, 
+            org_name: orgName,
+            org_type: selectedType,
+            org_dateStarted: formattedBirthdate,
+            org_phoneNumber: phoneNumber,
+            org_country: selectedCountry,
+            org_region: selectedRegion,
+            org_city: selectedCity,
+            org_barangay: selectedBarangay,
+            org_zipcode: zipcode,
+            org_currentAddress: currentAddress,
+            org_email: email, 
+            org_password: password, 
         };
 
         // Log the payload to verify
@@ -172,7 +165,7 @@ const Register = () => {
 
         // Step 5: Insert user data into public.user table
         const { data: insertData, error: insertError } = await supabase
-            .from("user") // Ensure you're targeting the correct schema
+            .from("organization") // Ensure you're targeting the correct schema
             .insert([payload]);
 
         if (insertError) {
@@ -188,7 +181,7 @@ const Register = () => {
         alert("Registration successful!");
 
         // Navigate to the next page (e.g., blood type page)
-        router.push("/bloodtype"); // Adjust the navigation path as needed
+        router.push("/"); // Adjust the navigation path as needed
     } catch (error) {
         console.error("Unexpected Error:", error);
         alert("An unexpected error occurred during registration. Please try again.");
@@ -203,53 +196,24 @@ const Register = () => {
       <SafeAreaView style={styles.container}>
         <ScrollView 
           style={styles.scrollView} 
-          contentContainerStyle={registerStyle.scrollContent} 
+          contentContainerStyle={registerorgStyle.scrollContent} 
           keyboardShouldPersistTaps="handled" 
         > 
           <Image source={codered} style={[styles.logoImage, { width: 150, height: 150, marginTop: 0 }]} />
           <Text style={[styles.headingTitle, { textAlign: 'center' }]}>
-            Create an Account
+            Create an Organization Account
           </Text>
 
-            <View style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+          <View style={{ alignItems: 'center' }}>
             <TextInput
-              label="FIRST NAME"
-              value={firstName}
-              mode="outlined"
-              activeOutlineColor="red"
-              outlineColor="red"
-              textColor="black"
-              onChangeText={setFirstName}
-              style={[
-                registerStyle.textInput, 
-                { fontFamily: "PoppinsBold", width: '95%', marginBottom: 8, alignSelf: 'center' }
-              ]}
-            />
-            <TextInput
-              label="MIDDLE INITIAL"
-              value={middleName}
-              mode="outlined"
-              activeOutlineColor="red"
-              outlineColor="red"
-              textColor="black"
-              onChangeText={(text) => setmiddleName(text.charAt(0))}
-              style={[
-                registerStyle.textInput, 
-                { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center' } // Adjust width as needed
-              ]}
-            />
-          </View>
-
-          <View>
-          <TextInput
-            label="LAST NAME"
-            value={lastName}
-            mode="outlined"
-            activeOutlineColor="red"
-            outlineColor="red"
-            textColor="black"
-            onChangeText={setLastName}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', flex: 1, alignSelf: 'center' }]}/>
+                label="ORGANIZATION NAME"
+                value={orgName}
+                mode="outlined"
+                activeOutlineColor="red"
+                outlineColor="red"
+                textColor="black"
+                onChangeText={setOrgName}
+                style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}/>
           </View>
 
           <View style={{
@@ -261,30 +225,49 @@ const Register = () => {
             alignSelf: 'center'
           }}>
             <Picker
-              selectedValue={selectedGender}
+              selectedValue={selectedType}
               onValueChange={(itemValue) => {
-                  if (itemValue !== "") setSelectedGender(itemValue);
+                  if (itemValue !== "") setSelectedType(itemValue);
                 }}
               >
-              <Picker.Item label="SELECT GENDER" value="" />
-              <Picker.Item label="MALE" value="Male" />
-              <Picker.Item label="FEMALE" value="Female" />
-              <Picker.Item label="RATHER NOT SAY" value="Others" />
+              <Picker.Item label="ORGANIZATIONAL TYPE" value="" />
+              <Picker.Item label="PROFIT" value="Profit" />
+              <Picker.Item label="NON-PROFIT" value="Non-Profit" />
             </Picker>
           </View>
+
+          <TextInput
+            label="CONTACT NUMBER"
+            value={phoneNumber}
+            mode="outlined"
+            activeOutlineColor="red"
+            outlineColor="red"
+            textColor="black"
+            keyboardType="numeric"
+            onChangeText={handlePhoneNumberChange}
+            style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
+            left={<TextInput.Affix text="+63" />}
+            maxLength={10}
+            editable
+          />
+          {phoneError && (
+            <Text style={{ color: 'black', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
+              Invalid Phone Number
+            </Text>
+          )}
 
           
           <TouchableOpacity onPress={() => setShowDatePicker(true)}>
             <TextInput
-              label="DATE OF BIRTH"
-              value={dateOfBirth}
+              label="DATE STARTED"
+              value={dateStarted}
               mode="outlined"
               activeOutlineColor="red"
               outlineColor="red"
               textColor="black"
               editable={false}
               right={<TextInput.Icon icon={"calendar"} color="red" />}
-              style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center' }]}/>
+              style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}/>
           </TouchableOpacity>
 
           {showDatePicker && (
@@ -296,27 +279,7 @@ const Register = () => {
             />
           )}
 
-          <TextInput
-            label="PHONE NUMBER"
-            value={phoneNumber}
-            mode="outlined"
-            activeOutlineColor="red"
-            outlineColor="red"
-            textColor="black"
-            keyboardType="numeric"
-            onChangeText={handlePhoneNumberChange}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
-            left={<TextInput.Affix text="+63" />}
-            maxLength={10}
-            editable
-          />
-          {phoneError && (
-            <Text style={{ color: 'red', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
-              Invalid Phone Number
-            </Text>
-          )}
-
-        <View style={{
+          <View style={{
             borderWidth: 1, 
             borderColor: 'red', 
             borderRadius: 5, 
@@ -481,7 +444,7 @@ const Register = () => {
             textColor="black"
             keyboardType="numeric"
             onChangeText={setZipcode}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
+            style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
           />
 
           <TextInput
@@ -492,7 +455,7 @@ const Register = () => {
             outlineColor="red"
             textColor="black"
             onChangeText={setCurrentAddress}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
+            style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
           />
 
           <TextInput
@@ -503,10 +466,10 @@ const Register = () => {
             outlineColor="red"
             textColor="black"
             onChangeText={handleEmailChange}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}/>
+            style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}/>
             
             {emailError && (
-            <Text style={{ color: 'red', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
+            <Text style={{ color: 'black', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
               Invalid Email
             </Text>
           )}
@@ -521,7 +484,7 @@ const Register = () => {
             secureTextEntry={!isPasswordVisible}
             onChangeText={setPassword}
             right={<TextInput.Icon icon={isPasswordVisible ? "eye-off" : "eye"} color="red" onPress={togglePasswordVisibility} />}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
+            style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
           />
           <TextInput
             label="CONFIRM PASSWORD"
@@ -533,22 +496,22 @@ const Register = () => {
             secureTextEntry={!isConfirmPasswordVisible}
             onChangeText={setConfirmPassword}
             right={<TextInput.Icon icon={isConfirmPasswordVisible ? "eye-off" : "eye"} color="red" onPress={toggleConfirmPasswordVisibility} />}
-            style={[registerStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
+            style={[registerorgStyle.textInput, { fontFamily: "PoppinsBold", width: '95%', alignSelf: 'center'}]}
           />
           {password !== confirmPassword && confirmPassword.length > 0 && (
-            <Text style={{ color: 'red', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
+            <Text style={{ color: 'black', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
               Passwords don't match
             </Text>
           )}
 
-          <View style={[registerStyle.checkboxContainer, { marginBottom: 2, marginLeft: 3 , alignSelf: 'center'}]}>
+          <View style={[registerorgStyle.checkboxContainer, { marginBottom: 2, marginLeft: 3 }]}>
             <Checkbox
               status={checked ? 'checked' : 'unchecked'}
               uncheckedColor="red"
               color="red"
               onPress={() => setChecked(!checked)}
             />
-            <Text style={registerStyle.checkboxLabel}>
+            <Text style={registerorgStyle.checkboxLabel}>
               By proceeding,  I consent to the Terms and Conditions and Privacy Policy.
             </Text>
           </View>
@@ -561,14 +524,14 @@ const Register = () => {
               loading={isLoading}
               buttonColor={isRegisterPressed ? "#ff8e92" : "red"}
               labelStyle={{ fontSize: 18, textAlign: 'center', color: 'white', fontFamily: "PoppinsBold" }} 
-              style={{ paddingVertical: 7, paddingHorizontal: 5, margin: 10, borderRadius:5, width: '95%', height: 50, marginBottom:120, alignSelf: 'center' }}
+              style={{ paddingVertical: 7, paddingHorizontal: 5, margin: 10, borderRadius: 5, width: '95%', height: 50, marginBottom:120 }}
             >
               PROCEED
             </Button>
           </View>
 
           <View style={[styles.footerContainer, { position: 'absolute', bottom: 0, left: 0, right: 0, zIndex:-1 }]}>
-            <Image source={footer} style={styles.footerImage} />
+            <Image source={footer} style={registerorgStyle.footerImage} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -576,6 +539,6 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Organization;
 
-const registerStyle = StyleSheet.create(styles);
+const registerorgStyle = StyleSheet.create(styles);

@@ -14,7 +14,7 @@ const Login = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const [logoSize, setLogoSize] = useState(150);
-    const [isLoginLoading, setIsLoginLoading] = useState(false);  // Added state for loading
+    const [isLoginLoading, setIsLoginLoading] = useState(false);  
     const footer = require("../../assets/gradient.png");
     const logo = require("../../assets/codered.png");
 
@@ -132,9 +132,9 @@ const Login = () => {
 
             <View style={{ alignItems: 'center', marginBottom: isKeyboardVisible ? -100 : 0 }}>
                 <Button
-                    mode="elevated"
+                    mode="contained"
                     onPress={handleLogin} // Fixed to call handleLogin
-                    buttonColor="#fe0009"
+                    buttonColor="red"
                     labelStyle={{
                         fontSize: 18,
                         textAlign: 'center',
@@ -142,7 +142,7 @@ const Login = () => {
                         fontFamily: "PoppinsBold",
                         marginBottom: -5
                     }}
-                    style={[styles.button, { borderRadius: 100, width: 290, height: 50 }]}
+                    style={[styles.button, { borderRadius: 5, width: 290, height: 50 }]}
                     loading={isLoginLoading} // Show loading indicator while logging in
                     disabled={isLoginLoading} // Disable button while loading
                 >
@@ -153,8 +153,8 @@ const Login = () => {
                     <>
                         <View style={{ alignItems: 'center' }}>
                             <Button
-                                mode="elevated"
-                                onPress={() => router.push('register')}
+                                mode="contained"
+                                onPress={() => router.push('portal')}
                                 buttonColor="#1dc5fd"
                                 labelStyle={{
                                     fontSize: 18,
@@ -166,7 +166,7 @@ const Login = () => {
                                     paddingVertical: 7,
                                     paddingHorizontal: 5,
                                     margin: 10,
-                                    borderRadius: 100,
+                                    borderRadius: 5,
                                     width: 290,
                                     height: 50
                                 }}
