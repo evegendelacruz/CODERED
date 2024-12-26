@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
 import { Text } from 'react-native'
@@ -117,7 +118,7 @@ export default function DrawerLayout() {
                     headerTitleAlign: 'center',
                     drawerIcon: ({ focused }) => (
                     <Octicons
-                        name="checklist"
+                        name="beaker"
                         size={20}
                         color={focused ? '#fe0009' : 'gray'}
                     />
