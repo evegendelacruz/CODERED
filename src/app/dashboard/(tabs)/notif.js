@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesome from 'react-native-vector-icons/FontAwesome6';
-import { useRoute, useNavigation } from '@react-navigation/native'; // Import useNavigation
+import { useRoute, useNavigation } from '@react-navigation/native';
+import * as Notifications from 'expo-notifications';
+
 
 // Function to calculate time difference
 const timeAgo = (timestamp) => {
