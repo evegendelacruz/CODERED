@@ -224,7 +224,7 @@ const Home = () => {
               style={{
                 borderColor: "#918F8F",
                 width: "100%",
-                height: 180,
+                height: 200,
                 borderWidth: 0.5,
                 marginTop: 26,
                 justifyContent: "center",

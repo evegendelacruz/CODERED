@@ -1,12 +1,11 @@
-import { StyleSheet } from 'react-native';
+import { ScaledSheet } from 'react-native-size-matters';
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    fontFamily: 'Poppins',
   },
 
   header: {
@@ -18,76 +17,77 @@ const styles = StyleSheet.create({
   headingTitle: {
     color: 'red',
     fontFamily: 'PoppinsBold',
-    fontSize: 26,
+    fontSize: '25@s',
+    marginTop: '-10@s',
   },
-  
+
   subheadingTitle: {
     color: 'black',
     fontFamily: 'Poppins',
-    fontSize: 14,
+    fontSize: '14@s',
     alignSelf: 'center',
-    textAlign:'center',
-    marginTop: 1,
-    marginHorizontal: 50
+    textAlign: 'center',
+    marginTop: '1@vs',
+    marginHorizontal: '40@s',
   },
 
   pageTitle: {
     fontFamily: 'PoppinsBold',
-    marginTop: 10,
     color: 'red',
-    fontSize: 25,
-    marginLeft: -210,
-    marginBottom: -10
+    fontSize: '25@s',
+    marginTop: '5@vs',
+    marginLeft: '-200@s',
+    marginBottom: '-10@vs',
   },
 
   logoImage: {
-    width: 170,
-    height: 170,
+    width: '170@s',
+    height: '170@s',
     alignSelf: 'center',
-    marginTop: -80,
+    marginTop: '-40@vs',
   },
 
   textInput: {
-    fontFamily: "Poppins",
-    fontSize: 15,
-    width: 290,
-    height: 50,  
-    borderColor: '#6edf3e', 
-    margin: 10,
+    fontFamily: 'Poppins',
+    fontSize: '15@s',
+    width: '280@s',
+    height: '50@vs',
+    borderWidth: 0, 
+    margin: '10@vs',
+    paddingHorizontal: '10@s',
   },
 
   button: {
     fontFamily: 'PoppinsBold',
-    fontSize: 20,
-    paddingVertical: 7, 
-    paddingHorizontal: 15, 
-    margin: 10,
+    fontSize: '18@s',
+    paddingVertical: '10@vs',
+    paddingHorizontal: '20@s',
+    margin: '10@vs',
   },
 
   scrollContent: {
-    padding: 26,
+    padding: '20@s',
   },
 
   checkboxContainer: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     alignItems: 'center',
-    fontFamily: "Poppins",
-    marginTop: -10
+    marginTop: '10@vs',
   },
+
   checkboxLabel: {
-    color: 'red', 
-    marginLeft: 8,
-    marginTop: 15,
-    fontFamily: "Poppins", 
-    fontSize: 12, 
-    marginLeft:-1
+    color: 'black',
+    fontFamily: 'Poppins',
+    fontSize: '12@s',
+    marginLeft: '5@s',
+    marginTop: '5@vs',
   },
 
   footerImage: {
     width: '100%',
-    height: 300,
+    height: '200@vs',
   },
-  
+
 });
 
 export default styles;

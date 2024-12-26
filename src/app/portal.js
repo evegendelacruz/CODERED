@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../styles/styles";
 import { useRouter } from "expo-router";
 import { Button } from "react-native-paper";
+import {AntDesign} from '@expo/vector-icons';
 
 const Portal = ({ navigation }) => {
   const router = useRouter();
@@ -56,28 +57,29 @@ const Portal = ({ navigation }) => {
       </Text>
 
       <View style={{ alignItems: "center", marginVertical: 10 }}>
-        <Button
-          mode="contained"
-          onPress={() => router.push("register")}
-          onPressIn={() => setIsUserPressed(true)}
-          onPressOut={() => setIsUserPressed(false)}
-          labelStyle={{
-            fontSize: 18,
-            textAlign: "center",
-            color: "white",
-            fontFamily: "PoppinsBold",
-          }}
-          style={{
-            backgroundColor: isUserPressed ? "#ff8e92" : "#fe0009",
-            paddingVertical: 7,
-            paddingHorizontal: 5,
-            margin: 10,
-            borderRadius: 7,
-            width: 240,
-            height: 50,
-          }}
+      <Button
+            mode="contained"
+            onPress={() => router.push("register")}
+            onPressIn={() => setIsUserPressed(true)}
+            onPressOut={() => setIsUserPressed(false)}
+            buttonColor="red"
+            labelStyle={{
+                fontSize: 18,
+                textAlign: 'center',
+                color: 'white',
+                fontFamily: "PoppinsBold",
+                marginBottom: -5
+            }}
+            style={{
+                paddingVertical: 7,
+                paddingHorizontal: 5,
+                margin: 10,
+                borderRadius: 5,
+                width: 290,
+                height: 50,
+            }}
         >
-          USER
+            USER
         </Button>
       </View>
 
@@ -87,23 +89,24 @@ const Portal = ({ navigation }) => {
         <Button
           mode="contained"
           onPress={() => router.push("regorganization")}
-          onPressIn={() => setIsUserPressed(true)}
-          onPressOut={() => setIsUserPressed(false)}
-          labelStyle={{
-            fontSize: 18,
-            textAlign: "center",
-            color: "white",
-            fontFamily: "PoppinsBold",
-          }}
-          style={{
-            backgroundColor: isUserPressed ? "#ff8e92" : "#fe0009",
-            paddingVertical: 7,
-            paddingHorizontal: 5,
-            margin: 10,
-            borderRadius: 7,
-            width: 240,
-            height: 50,
-          }}
+          onPressIn={() => setIsAdminPressed(true)}
+          onPressOut={() => setIsAdminPressed(false)}
+          buttonColor="red"
+            labelStyle={{
+                fontSize: 18,
+                textAlign: 'center',
+                color: 'white',
+                fontFamily: "PoppinsBold",
+                marginBottom: -5
+            }}
+            style={{
+             paddingVertical: 7,
+             paddingHorizontal: 5,
+             margin: 10,
+             borderRadius: 5,
+             width: 290,
+             height: 50
+            }}
         >
           ORGANIZATION
         </Button>
