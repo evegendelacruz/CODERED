@@ -15,7 +15,7 @@ import { Calendar } from 'react-native-calendars';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Platform } from 'react-native';
-import * as Notifications from 'expo-notifications'; // Import Notifications
+import * as Notifications from 'expo-notifications'; 
 import { supabase } from './../../../../src/utils/supabase'; // Import the Supabase client
 
 const { width } = Dimensions.get('window');
