@@ -123,4 +123,3 @@ const forgotStyle = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
