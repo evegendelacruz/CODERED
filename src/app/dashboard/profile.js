@@ -8,8 +8,10 @@ import {
   Image,
   ScrollView,
   TextInput,
+  Alert
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
+import * as ImagePicker from "expo-image-picker"; 
+import { ActivityIndicator } from "react-native-paper";
 import { supabase } from "../../utils/supabase";
 import { Ionicons } from "@expo/vector-icons";
 import { List } from "react-native-paper";
@@ -25,68 +27,69 @@ const Profile = ({ navigation }) => {
   const [bloodType, setBloodType] = useState("Loading...");
   const [imageUri, setImageUri] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getImageSource = () => {
+    return imageUri ? { uri: imageUri } : avatar;
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const { data: authUser, error: authError } =
-          await supabase.auth.getUser();
+        const { data: authUser, error: authError } = await supabase.auth.getUser();
         if (authError || !authUser?.user) {
-          console.error(
-            "Error fetching authenticated user:",
-            authError?.message
-          );
+          console.error("Error fetching authenticated user:", authError?.message);
           setUserName("Unable to load user");
           return;
         }
-
+  
         const authId = authUser.user.id;
-
+  
         // Fetch user information
         const { data: userData, error: userError } = await supabase
           .from("user")
           .select("user_firstname, user_middlename, user_lastname")
           .eq("auth_id", authId)
           .single();
-
+  
         if (userError) {
           console.error("Error fetching user data:", userError.message);
           setUserName("Name not available");
           return;
         }
-
+  
         // Fetch blood type information
         const { data: bloodData, error: bloodError } = await supabase
           .from("blood_type")
           .select("type_blood_group, type_rh_factor")
           .eq("auth_id", authId)
           .single();
-
+  
         if (bloodError) {
           console.error("Error fetching blood type data:", bloodError.message);
           setBloodType("Blood type not available");
           return;
         }
-
+  
         const firstName = userData?.user_firstname || "";
         const middleName = userData?.user_middlename || "";
         const lastName = userData?.user_lastname || "";
         const middleInitial = middleName ? `${middleName[0]}.` : "";
         const fullName = `${firstName} ${middleInitial} ${lastName}`.trim();
-
+  
         setUserName(fullName || "Name not available");
-
+  
         const fullBloodType = `${bloodData?.type_blood_group || ""} ${
           bloodData?.type_rh_factor || ""
         }`.trim();
         setBloodType(fullBloodType || "Blood type not available");
-
+  
         // Fetch the profile picture using the correct file path with cache busting
         const filePath = `user_profile/${authId}.jpg`; // Use the same path as the upload
         const { data: profilePicData, error: picError } = await supabase.storage
           .from("uploads")
           .getPublicUrl(filePath);
-
+  
         if (picError) {
           console.error("Error fetching profile picture:", picError.message);
           setImage(avatar); // Default image if error occurs
@@ -100,9 +103,42 @@ const Profile = ({ navigation }) => {
         setUserName("Error loading name");
       }
     };
-
+  
+    // Fetch user data once on mount
     fetchUserData();
-  }, []); // Empty dependency array ensures this runs once on component mount
+  
+    // Set up a realtime subscription for user changes
+    const userChannel = supabase
+      .channel("user_changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "user" },
+        (payload) => {
+          console.log("User table changed:", payload);
+          fetchUserData(); // Re-fetch user data on any change
+        }
+      )
+      .subscribe();
+  
+    const bloodTypeChannel = supabase
+      .channel("blood_type_changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "blood_type" },
+        (payload) => {
+          console.log("Blood type table changed:", payload);
+          fetchUserData(); // Re-fetch user data on any change
+        }
+      )
+      .subscribe();
+  
+    // Clean up the subscriptions when the component unmounts
+    return () => {
+      supabase.removeChannel(userChannel);
+      supabase.removeChannel(bloodTypeChannel);
+    };
+  }, []);
+  
 
   // Handle image picker when editing
   const handleImagePickerPress = async (source) => {
@@ -265,7 +301,7 @@ const Profile = ({ navigation }) => {
     };
 
     fetchUserData();
-  }, []); // Empty dependency array to run only once when the component mounts
+  }, []);
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
@@ -276,111 +312,172 @@ const Profile = ({ navigation }) => {
   };
 
   const handleUpdate = async () => {
+    setIsLoading(true);
     if (isEditing) {
       try {
         // Fetch authenticated user
-        const { data: authUser, error: authError } =
-          await supabase.auth.getUser();
+        const { data: authUser, error: authError } = await supabase.auth.getUser();
         if (authError || !authUser?.user) {
-          console.error(
-            "Error fetching authenticated user:",
-            authError?.message
-          );
+          console.error("Error fetching authenticated user:", authError?.message);
           alert("Error fetching authenticated user. Please log in again.");
+          setIsLoading(false);
           return;
         }
-
+  
         const authId = authUser.user.id;
-
+  
         // Normalize the phone number
         const phoneWithoutPrefix = formData.phone.startsWith("+63 ")
           ? formData.phone.slice(3) // Remove +63 prefix
           : formData.phone;
-
+  
         // Prepare updated user details
         const updatedUserDetails = {};
-
-        // Only update fields that have changed or are non-empty
+  
+        // Update user profile details
         if (formData.name !== "default name") {
           const nameParts = formData.name.trim().split(" ");
           updatedUserDetails.user_firstname = nameParts[0]; // First name
-          updatedUserDetails.user_middlename =
-            nameParts.length > 2 ? nameParts[1] || "" : "";
+          updatedUserDetails.user_middlename = nameParts.length > 2 ? nameParts[1] || "" : "";
           updatedUserDetails.user_lastname = nameParts.slice(2).join(" ");
         }
         if (formData.gender) updatedUserDetails.user_gender = formData.gender;
-        if (formData.birthdate)
-          updatedUserDetails.user_birthdate = formData.birthdate;
-        if (phoneWithoutPrefix)
-          updatedUserDetails.user_phoneNumber = phoneWithoutPrefix;
-        if (formData.location)
-          updatedUserDetails.user_currentAddress = formData.location;
-        if (formData.email) updatedUserDetails.user_email = formData.email;
-        if (formData.password)
-          updatedUserDetails.user_password = formData.password;
-
-        // Update user details in the 'user' table
+        if (formData.birthdate) updatedUserDetails.user_birthdate = formData.birthdate;
+        if (phoneWithoutPrefix) updatedUserDetails.user_phoneNumber = phoneWithoutPrefix;
+        if (formData.location) updatedUserDetails.user_currentAddress = formData.location;
+  
+        // Fetch the current password from the user table
+        const { data: userData, error: userFetchError } = await supabase
+          .from("user")
+          .select("user_password")
+          .eq("auth_id", authId)
+          .single();
+  
+        if (userFetchError) {
+          console.error("Error fetching current password:", userFetchError.message);
+          alert("Error fetching current user data.");
+          setIsLoading(false);
+          return;
+        }
+  
+        const currentPassword = userData?.user_password;
+  
+        // Update the password only if it's different from the current password
+        if (formData.password && formData.password !== currentPassword) {
+          const { data: authData, error: authUpdateError } = await supabase.auth.updateUser({
+            password: formData.password,
+          });
+  
+          if (authUpdateError) {
+            console.error("Error updating password:", authUpdateError.message);
+            alert("Error updating password. Please try again.");
+            setIsLoading(false);
+            return;
+          }
+  
+          console.log("Password updated successfully:", authData);
+  
+          // Update the password in the user table
+          const { data: userUpdateData, error: userUpdateError } = await supabase
+            .from("user")
+            .update({ user_password: formData.password })
+            .eq("auth_id", authData.user.id);
+  
+          if (userUpdateError) {
+            console.error("Error updating user password in the database:", userUpdateError.message);
+            alert("Error updating user password in the database.");
+            setIsLoading(false);
+            return;
+          }
+  
+          console.log("User password updated successfully:", userUpdateData);
+        } else if (formData.password) {
+          console.log("New password is the same as the current password. No update required.");
+        }
+  
+        // Update email via Supabase authentication API
+        if (formData.email) {
+          const { data: emailData, error: emailUpdateError } = await supabase.auth.updateUser({
+            email: formData.email,
+          });
+          if (emailUpdateError) {
+            console.error("Error updating email:", emailUpdateError.message);
+            alert("Error updating email. Please try again.");
+            setIsLoading(false);
+            return;
+          }
+          console.log("Email updated successfully:", emailData);
+        }
+  
+        // Update other user details in the 'user' table
         const { data: userUpdateData, error: userUpdateError } = await supabase
           .from("user")
           .update(updatedUserDetails)
           .eq("auth_id", authId);
-
+  
         if (userUpdateError) {
           console.error("Error updating user data:", userUpdateError.message);
           alert("Error updating user details.");
+          setIsLoading(false);
           return;
         }
-
+  
         console.log("User details updated successfully:", userUpdateData);
-
+  
+        // Update blood type if provided
         const updatedBloodType = {};
         if (formData.bloodType) {
           updatedBloodType.type_blood_group = formData.bloodType.split(" ")[0];
-          updatedBloodType.type_rh_factor =
-            formData.bloodType.split(" ")[1] || "";
+          updatedBloodType.type_rh_factor = formData.bloodType.split(" ")[1] || "";
         }
-
+  
         if (Object.keys(updatedBloodType).length > 0) {
-          const { data: bloodUpdateData, error: bloodUpdateError } =
-            await supabase
-              .from("blood_type")
-              .update(updatedBloodType)
-              .eq("auth_id", authId);
-
+          const { data: bloodUpdateData, error: bloodUpdateError } = await supabase
+            .from("blood_type")
+            .update(updatedBloodType)
+            .eq("auth_id", authId);
+  
           if (bloodUpdateError) {
-            console.error(
-              "Error updating blood type data:",
-              bloodUpdateError.message
-            );
+            console.error("Error updating blood type data:", bloodUpdateError.message);
             alert("Error updating blood type.");
+            setIsLoading(false);
             return;
           }
-
+  
           console.log("Blood type updated successfully:", bloodUpdateData);
         }
-
+  
         // Handle image upload if provided
         if (imageUri) {
           try {
             await uploadImage(); // Call the uploadImage function
             console.log("Image uploaded successfully");
-            alert("Profile and image updated successfully!");
+            Alert.alert("Confirmation", "Profile information updated successfully!");
+            setIsLoading(false);
           } catch (uploadError) {
             console.error("Error uploading image:", uploadError.message);
             alert("Failed to upload image.");
+            setIsLoading(false);
           }
         } else {
-          alert("Profile updated successfully!");
+          Alert.alert("Confirmation", "Profile information updated successfully!");
+          setIsLoading(false);
         }
+  
+        // Return to view mode
+        setIsEditing(false);
       } catch (error) {
         console.error("Error during update operation:", error.message);
         alert("An error occurred while updating the profile.");
+        setIsLoading(false);
       }
     } else {
-      handleEditToggle();
+      // Enter edit mode
+      setIsEditing(true);
     }
   };
-
+  
+  
   return (
     <ScrollView>
       <SafeAreaView
@@ -388,14 +485,13 @@ const Profile = ({ navigation }) => {
       >
         <View style={[styles.header, isDarkMode && styles.darkHeader]}>
           <View style={{ position: "relative" }}>
-            <Image
-              source={typeof image === "string" ? { uri: image } : image}
-              style={[
-                styles.profileImage,
-                { borderColor: isDarkMode ? "#bbb" : "#dddddd" },
-              ]}
-            />
-
+          <Image
+            source={(!image || image === avatar) ? avatar : { uri: image }}
+            style={[
+              styles.profileImage,
+              { borderColor: isDarkMode ? "#bbb" : "#dddddd" },
+            ]}
+          />
             {/* Camera Button shown only when editing */}
             {isEditing && (
               <TouchableOpacity
@@ -522,13 +618,23 @@ const Profile = ({ navigation }) => {
                 styles.button,
                 isEditing ? styles.saveButton : styles.editButton,
               ]}
-              onPress={() => {
-                handleUpdate();
+              onPress={async () => {
+                if (isEditing) {
+                  setIsLoading(true); // Show loader when "UPDATE" is clicked
+                  await handleUpdate();
+                  setIsLoading(false); // Hide loader after update completes
+                } else {
+                  setIsEditing(true); // Enter edit mode
+                }
               }}
             >
-              <Text style={styles.buttonText}>
-                {isEditing ? "UPDATE" : "EDIT PROFILE"}
-              </Text>
+              {isLoading ? (
+                <ActivityIndicator color="#fff" size="small" />
+              ) : (
+                <Text style={styles.buttonText}>
+                  {isEditing ? "UPDATE" : "EDIT PROFILE"}
+                </Text>
+              )}
             </TouchableOpacity>
           </View>
         </View>
