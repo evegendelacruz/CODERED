@@ -1,9 +1,15 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Education = () => {
-
+  const question = require("../../assets/question.png");
+  const idea = require("../../assets/idea.png");
+  const strong = require("../../assets/strong.png");
+  const calm = require("../../assets/nopost.png");
+  const couple = require("../../assets/couple.png");
+  const noteligible = require("../../assets/not eligible.png");
+  const contact = require("../../assets/contact.png");
   const data = [
     { name: "Feldene", alias: "piroxicam", time: "2 days" },
     { name: "Effient", alias: "prasugrel", time: "3 days" },
@@ -54,20 +60,23 @@ const Education = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: 20, backgroundColor: 'white' }}>
         {/* Header Section */}
         <View>
           <Text style={styles.title}>
             What You Must Know Before Giving Blood
           </Text>
-          <Text style={styles.subtitle}>
+
+          <Image source={question} style={styles.resultImg} />
+
+          <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold',}]}>
             YOU MUST READ THIS BEFORE YOU DONATE!
           </Text>
         </View>
 
         {/* Content Section */}
         <View style={styles.contentContainer}>
-        <Text style={[styles.text, { textAlign: 'justify', fontSize: 12 }]}>
+        <Text style={[styles.text, { textAlign: 'justify', fontSize: 12}]}>
           Your{' '}
         <Text style={{ textDecorationLine: 'underline' }}>
           accurate and honest
@@ -76,24 +85,20 @@ const Education = () => {
           transfusions.
         </Text>
 
-        <Text style={[styles.text2, { fontSize: 9.2 }]}>
-          Each question is necessary to fully evaluate the safety of your donation.
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
+        • Each question is necessary to fully evaluate the safety of your donation.
         </Text>
 
-        <Text style={[styles.text2, { fontSize: 9.2 }]}>
-          As required by regulations, we are instructing you not to donate blood if you have a risk factor.
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
+        • As required by regulations, we are instructing you not to donate blood if you have a risk factor.
         </Text>
 
-        <Text style={[styles.text2, { fontSize: 9.2 }]}>
-          If you don’t understand a question, ask the blood center staff for assistance.
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
+        • If you don’t understand a question, ask the blood center staff for assistance.
         </Text>
 
-        <Text style={[styles.text2, { fontSize: 9.2 }]}>
-          YOUR RESPONSES ARE CONFIDENTIAL.
-        </Text>
-
-        <Text style={styles.subtitle}>Knowing what to expect</Text>
-          <Text style={styles.text}>
+        <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold'}]}>KNOWING WHAT TO EXPECT</Text>
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
           Most people have uneventful donations and feel good about donating afterward,
           but some donors may have a lightheaded or dizzy feeling; an upset stomach;
           a black and blue mark, redness, or pain from the needle;
@@ -102,42 +107,42 @@ const Education = () => {
           Blood donation removes iron from the body and may cause or aggravate iron-deficiency anemia.
           </Text>
 
-        <Text style={styles.subtitle}>
-            To determine if you are eligible to donate, we will
+        <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>
+            To determine if you are eligible to donate, we will:
           </Text>
-          <Text style={styles.text2}>
-            - Ask about your health and medications you are taking or have taken.
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
+            1. Ask about your health and medications you are taking or have taken.
           </Text>
-          <Text style={styles.text2}>
-            - Ask if you have traveled to or lived in other countries.
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
+            2. Ask if you have traveled to or lived in other countries.
           </Text>
-          <Text style={styles.text2}>
-            - Ask about your risk for infections that can be transmitted by blood
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
+            3. Ask about your risk for infections that can be transmitted by blood
             – especially HIV (which is the virus that causes AIDS), and viral
             hepatitis.
           </Text>
-          <Text style={styles.text2}>
-            - Take your blood pressure, temperature, and pulse.
+          <Text style={[styles.text2, { fontSize: 12 , color: 'gray'}]}>
+            4. Take your blood pressure, temperature, and pulse.
           </Text>
-          <Text style={styles.text2}>
-            - Take a blood sample to be sure your blood count is acceptable.
+          <Text style={[styles.text2, { fontSize: 12 , color: 'gray'}]}>
+            5. Take a blood sample to be sure your blood count is acceptable.
           </Text>
 
-        <Text style={styles.subtitle}>If you are eligible to donate, we will</Text>
-          <Text style={styles.text2}>
-            - Clean your arm with an antiseptic. Tell us if you have any skin
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>If you are eligible to donate, we will:</Text>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
+            1. Clean your arm with an antiseptic. Tell us if you have any skin
             allergies.
           </Text>
-          <Text style={styles.text2}>
-            - Use a sterile needle and tubing set to collect your blood.
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
+            2. Use a sterile needle and tubing set to collect your blood.
           </Text>
 
-          <Text style={[styles.text3, { fontSize: 10}]}>
-            We NEVER reuse a needle and tubing set.
+          <Text style={[styles.subtitle, {textAlign: 'center', marginHorizontal: 10,}]}>
+            We <Text style={{fontFamily:'PoppinsBold'}}>NEVER</Text> reuse a needle and tubing set.
           </Text>
 
-        <Text style={styles.subtitle}>What Happens after Your Donation</Text>
-          <Text style={styles.text}>
+          <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold'}]}>WHAT HAPPENS AFTER YOUR DONATION</Text>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
             To protect patients, your blood is tested for hepatitis B and C, HIV,
             syphilis, and other infections. If your blood tests positive, it will
             not be given to a patient. You will be notified about any positive
@@ -148,187 +153,189 @@ const Education = () => {
             required by law (e.g., to the health department).
           </Text>
 
-        <Text style={styles.subtitle}>Donor Eligibility – Specific Information</Text>
-          <Text style={styles.text}>
+          <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold'}]}>DONOR ELIGIBILITY – SPECIFIC INFORMATION</Text>
+          <Image source={idea} style={styles.resultImg} />
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
             Certain infectious diseases such as HIV and hepatitis, can be spread through:
           </Text>
 
-          <Text style={styles.text2}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
             - Sexual contact
           </Text>
 
-          <Text style={styles.text2}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
             - Other activities that increase risk
           </Text>
 
-          <Text style={styles.text2}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
             - Blood transfusion
           </Text>
 
-          <Text style={[styles.text3, { fontSize: 10}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10 }]}>
             We will ask specific questions about sexual contact and other activities that may increase risk for these infections.
           </Text>
 
-        <Text style={styles.subtitle}>What do we mean by “sexual contact?”</Text>
-          <Text style={styles.text}>
+          <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold'}]}>WHAT DO WE MEAN BY “SEXUAL CONTACT?”</Text>
+          <Image source={couple} style={styles.resultImg} />
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
             The words “have sexual contact with” and “sex” are used in some of the questions we will ask you, These questions, apply to all of the activities below,
             whether or not medications, condoms or other protection were used to prevent infection or pregnancy:
           </Text>
 
-          <Text style={styles.text2}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
             - Vaginal sex (contact between penis and vagina)
           </Text>
 
-          <Text style={styles.text2}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
             - Oral sex (mouth or tongue on someone’s vagina, penis, or anus)
           </Text>
 
-          <Text style={styles.text2}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray' }]}>
             - Anal sex (contact between penis and anus)
           </Text>
     
-        <Text style={styles.subtitle}>A "new sexual partner" includes the following examples:</Text>
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>A "new sexual partner" includes the following examples:</Text>
           
-          <Text style={styles.text}>
-            - Having sex with someone for the first time
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', textAlign:'center' }]}>
+           Having sex with someone for the first time
           </Text>
 
-          <Text style={[styles.text3, { fontSize: 12}]} >
+          <Text style={[styles.text3, { fontSize: 12, textAlign:'center'}]} >
             OR
           </Text>
 
-          <Text style={styles.text}>
-            - Having had sex with someone in a relationship that ended in the past, and having sex again with that person in the last 3 months.
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+            Having had sex with someone in a relationship that ended in the past, and having sex again with that person in the last 3 months.
           </Text>
 
-        <Text style={styles.subtitle}>HIV/Hepatitis Risk Factors</Text>
-          <Text style={styles.text}>
+          <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold'}]}>HIV/HEPATITIS RISK FACTORS</Text>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
           HIV and hepatitis are spread mainly by sexual contact with an infected person OR by sharing needles or syringes used by an infected person to inject drugs.
           </Text>
 
-        <Text style={styles.subtitle}>DO NOT DONATE IF YOU</Text>
-          <Text style={styles.text2}>
-          - Have EVER taken any medication to treat HIV infection.
+          <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold'}]}>DO NOT DONATE IF YOU</Text>
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          1. Have EVER taken any medication to treat HIV infection.
           </Text>
 
-          <Text style={styles.text2}>
-          - Are taking any medication to prevent HIV infection. These medications may be called: PrEP, PEP, TRUVADA, DESCOVY, APRETUDE or many other names.
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          2. Are taking any medication to prevent HIV infection. These medications may be called: PrEP, PEP, TRUVADA, DESCOVY, APRETUDE or many other names.
           </Text>
 
-          <Text style={[styles.text3, { fontSize: 9.6}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
           FDA-approved antiretroviral drugs are safe and effective in preventing sexual transmission of HIV.
           However, these antiretroviral drugs do not fully eliminate the virus from the body, and donated blood can potentially still
           transmit HIV infection to a transfusion recipient.
           </Text>
 
-          <Text style={[styles.text3, { fontSize: 11.5}]}>
-            DO NOT STOP TAKING ANY PRESCRIBED MEDICATIONS IN ORDER TO DONATE BLOOD, INCLUDING PrEP and PEP MEDICATIONS
+          <Text style={[styles.text2, { fontSize: 12}]}>
+            <Text style={{fontFamily: 'PoppinsBold'}}>NOTE:</Text> DO NOT STOP TAKING ANY PRESCRIBED MEDICATIONS IN ORDER TO DONATE BLOOD, INCLUDING PrEP and PEP MEDICATIONS
           </Text>
 
-        <Text style={styles.subtitle}>DO NOT DONATE IF YOU</Text>
-          <Text style={styles.text2}>
-          - Have ever had a positive test for HIV infection
+          <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold'}]}>DO NOT DONATE IF YOU</Text>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          3. Have ever had a positive test for HIV infection
           </Text>
 
-          <Text style={[styles.text3, { fontSize: 14}]}>
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>
           In the past 3 Months:
           </Text>
 
-          <Text style={styles.text2}>
-          - Have had sexual contact with a new partner
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          4. Have had sexual contact with a new partner
           and have had anal sex.
           </Text>
 
-          <Text style={styles.text2}>
-          - Have had sexual contact with more than one partner
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          5. Have had sexual contact with more than one partner
           and have had anal sex.
           </Text>
 
-          <Text style={styles.text2}>
-          - Have had sexual contact with anyone who has
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          6. Have had sexual contact with anyone who has
           ever had a positive test for HIV infection
           </Text>
 
-          <Text style={styles.text2}>
-          - Have received money, drugs or other payment for sex
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          7. Have received money, drugs or other payment for sex
           </Text>
 
-          <Text style={styles.text2}>
-          - Have used needles to inject drugs, steroids or
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          8. Have used needles to inject drugs, steroids or
           anything not prescribed by your doctor.
           </Text>
 
-          <Text style={styles.text2}>
-          - Have used needles to inject drugs, steroids or
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          9. Have used needles to inject drugs, steroids or
           anything not prescribed by your doctor.
           </Text>
 
-          <Text style={styles.text2}>
-          - Have had sexual contact with anyone who has received money,
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          10. Have had sexual contact with anyone who has received money,
           drugs, or other payment for sex, or used needles to inject drugs,
           steroids or anything not prescribed by their doctor.
           </Text>
 
-          <Text style={styles.text2}>
-          - Have had syphilis or gonorrhea or been
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          11. Have had syphilis or gonorrhea or been
           treated for syphilis or gonorrhea
           </Text>
 
-          <Text style={[styles.text3, { fontSize: 14}]}>
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>
           In the past 12 Months:
           </Text>
 
-          <Text style={styles.text2}>
-          - Have been in juvenile detention, lockup, jail,
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          12. Have been in juvenile detention, lockup, jail,
           or prison for 72 hours or more consecutively
           </Text>
 
-          <Text style={styles.text2}>
-          - Have ever had Ebola virus infection or disease.
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          13. Have ever had Ebola virus infection or disease.
           </Text>
 
-          <Text style={[styles.text3, { fontSize: 14}]}>
-          DO NOT DONATE if you have these symptoms,
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>
+          <Text style={{fontFamily: 'PoppinsBold'}}>DO NOT DONATE</Text> if you have these symptoms,
           which can be present before you test positive for HIV:
           </Text>
 
-          <Text style={styles.text2}>
-          - Fever
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          • Fever
           </Text>
 
-          <Text style={styles.text2}>
-          - Enlarged lymph glands
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          • Enlarged lymph glands
           </Text>
 
-          <Text style={styles.text2}>
-          - Sore throat
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          • Sore throat
           </Text>
 
-          <Text style={styles.text2}>
-          - Rash
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          • Rash
           </Text>
 
-          <Text style={[styles.text3, { fontSize: 11}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
           Your blood can transmit infections, including HIV, even if you feel well
           and all your tests are normal. EVEN the best tests cannot detect the virus
           for a period of time after you are infected.
           </Text>
 
-        <Text style={styles.subtitle}>DO NOT DONATE IF YOU</Text>
-          <Text style={styles.text2}>
-          - If you think you may be at risk for HIV or other infections.
+          <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold'}]}>DO NOT DONATE IF YOU</Text>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          • If you think you may be at risk for HIV or other infections.
           </Text>
 
-          <Text style={styles.text2}>
-          - If your purpose for donating is to obtain test results for HIV or other infections.
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          • If your purpose for donating is to obtain test results for HIV or other infections.
           Ask us where you can be tested for HIV and other infections.
           </Text>
 
-          <Text style={styles.text2}>
-          - If your donation might harm the patient who receives your blood.
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+          • If your donation might harm the patient who receives your blood.
           </Text>
 
-          <Text style={[styles.text3, { fontSize: 10}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
           We maintain a confidential list of people who may be at risk for spreading
           transfusion-transmitted diseases. By continuing this process, you consent to be
           entered in this confidential list of deferred donors if you are at risk for
@@ -337,218 +344,215 @@ const Education = () => {
           also be used confidentially for research related to blood safety.
           </Text>
 
-        <Text style={styles.subtitle}>CONTACT</Text>
-          <Text style={styles.text}>
+          <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold', fontSize: 20}]}>CONTACT</Text>
+          <Image source={contact} style={styles.resultImg} />
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
           We may contact you at any phone number or e-mail address you provide, including by automated telephone call or text,
           regarding your blood donation, future blood donations, and other opportunities to support the American Red Cross mission.
           You may choose not to provide a particular phone number or e-mail address if you do not want us to use it for these purposes.
           </Text>
 
-        <Text style={styles.subtitle}>INFORMATION WE VERIFY WITH YOU</Text>
-          <Text style={styles.text}>
+        <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold'}]}>INFORMATION WE VERIFY WITH YOU</Text>
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             We will ask you to confirm information that we have in your computer record to ensure we have the most updated information.
             You will be asked to confirm all of your demographic information, including your gender.
             This will ensure that the information we have is current and correct.
           </Text>
 
-          <Text style={styles.text3}>
-            Questions? Please call us at 1-800-RED-CROSS (1-800-733-2767)
-          </Text>
-
-          <Text style={[styles.text3, { fontSize: 15}]}>
-            THANK YOU FOR DONATING BLOOD TODAY!
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
+            Questions? Please call us at 088-RED-CROSS ((088)-856-8855) or email at us misamis.oriental@redcross.org.ph.
           </Text>
 
         </View>
 
         <View>
-          <Text style={styles.title}>
-            Information Sheet Transfusion-Related Acute Lung Injury (TRALI)
+        <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold', fontSize: 20, marginHorizontal: 20}]}>
+            INFORMATION SHEET TRANSFUSION-RELATED ACUTE INJURY (TRALI)
           </Text>
         </View>
 
         <View style={styles.contentContainer}>
 
-          <Text style={[styles.text, { fontSize: 10}]}>
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             TRALI is an acute complication following blood transfusion that is characterized by severe shortness of breath, often associated with fever and low blood pressure. Although rare, it is one of the most common causes of transfusion-related death. TRALI can occur rapidly after a blood transfusion and is often associated with the receipt of plasma or platelet products.
           </Text>
 
-          <Text style={styles.text3}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             In order to maintain the safest possible blood supply for our patients, we need to reduce the risk of TRALI in the plasma and platelets we collect.
           </Text>
 
-          <Text style={[styles.text, { fontSize: 10}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             There is no specific test to identify blood products that will cause TRALI in a transfusion recipient. However, we do know that units of plasma or platelets that have caused a TRALI reaction in a transfusion recipient often contain antibodies to human leukocyte antigens (HLA). These antibodies are known as HLA antibodies and are on the white blood cell (leukocyte) surfaces. When women are exposed to their baby’s blood during pregnancy and delivery, they may develop HLA antibodies. There is a direct relationship between pregnancy history and having a positive test for HLA antibodies.
           </Text>
 
-          <Text style={styles.text3}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             The presence of these HLA antibodies in a healthy individual’s blood does not cause health problems, and generally does not cause harm when transfused to patients. However, in rare cases, HLA antibodies may contribute to a TRALI reaction in a transfusion recipient.
           </Text>
 
-          <Text style={styles.text3}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             We can reduce the chance that blood products—particularly plasma or platelet products—contain these HLA antibodies, and reduce the risk of a TRALI reaction in transfusion recipients by expanding the screening process for all female donors.
           </Text>
 
-          <Text style={styles.text3}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             If you are a female donor, we will ask you how many pregnancies you have had. If you are donating apheresis, we will test a sample of your blood for HLA antibodies. This screening will be performed each time the number of pregnancies you have had changes.
           </Text>
 
-          <Text style={[styles.text, { textAlign: 'justify', fontSize: 10, marginTop: 10 }]}>
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>
             If your test for HLA antibodies is{' '}
           <Text style={{ textDecorationLine: 'underline' }}>
-            negative
-          </Text>{' '}
+            negative:
+          </Text>
           </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
             • You can continue to donate platelets and or plasma.
           </Text>
 
-          <Text style={[styles.text, { textAlign: 'justify', fontSize: 10, marginTop: 30 }]}>
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>
             If your test for HLA antibodies is{' '}
           <Text style={{ textDecorationLine: 'underline' }}>
-            positive
+            positive:
           </Text>{' '}
           </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             • You will be notified by mail; the notification letter will not say anything about your pregnancy history.
             You will be asked to stop donating plasma or platelets by apheresis.
           </Text>
 
-          <Text style={[styles.text3, {fontSize: 10.5, marginTop: 7}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             • You will be encouraged to help us in the future by donating red blood cells or by helping the Red Cross as a volunteer.
           </Text>
 
-          <Text style={styles.text3}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             A positive test result does not affect your health. TRALI is a condition that only affects some blood recipients. It does not affect blood donors.
           </Text>
 
-          <Text style={styles.text3}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             If you have any questions about this information, please ask the supervisor at your collection site.
           </Text>
 
-          <Text style={styles.text}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             If you are a regular donor and you have been pregnant in the past, please continue to donate on a regular schedule at this time.
             Not all individuals who have been pregnant develop HLA antibodies, and your help is needed to supply life-giving blood products to the patients who depend on us.
           </Text>
         </View>
 
         <View>
-          <Text style={styles.title}>
-            Possible Use of Donor Information and Blood Samples in Medical Research
+        <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold', fontSize: 20, marginHorizontal: 20}]}>
+            POSSIBLE USE OF DONOR INFORMATION AND BLOOD SAMPLES IN MEDICAL RESEARCH
           </Text>
         </View>
 
         <View style={styles.contentContainer}>
 
-          <Text style={[styles.text, { fontSize: 10}]}>
-            The American Red Cross mission is to provide a safe and effective blood supply. As part of this mission,
-            the American Red Cross may conduct research. We conduct some research with other institutions, such as academic centers, government agencies,
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
+            The Philippine Red Cross mission is to provide a safe and effective blood supply. As part of this mission,
+            the Philippine Red Cross may conduct research. We conduct some research with other institutions, such as academic centers, government agencies,
             and biomedical companies. Research is an important aspect of our commitment to donor and recipient safety.
           </Text>
 
-        <Text style={styles.subtitle}>How might your blood or information be used in medical research?</Text>
-          <Text style={[styles.text, { fontSize: 10}]}>
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>How might your blood or information be used in medical research?</Text>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
             We may store and use a portion of your blood or information collected at the time of donation for research studies.
             Some examples of the types of research are studies related to
           </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             • Testing, storing, collecting, and processing blood.
           </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5, marginBottom: 30}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
             • Ways to recruit blood donors or evaluate donor eligibility or contributions to public health.
           </Text>
 
-          <Text style={styles.text}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             You will not receive any direct benefit from any research. It is possible that the research may benefit commercial interests.
             Blood components not needed by patients may be provided to institutions for medical or scientific research.
             You will not be notified as to the use of your blood or donor information when it is used for research.
           </Text>
 
-        <Text style={styles.subtitle}>How is your confidentiality protected when your blood or information is used in research?</Text>
-          <Text style={[styles.text2, {fontSize: 10.5}]}>
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>How is your confidentiality protected when your blood or information is used in research?</Text>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
             • Research participation will not involve any cost, time, or additional procedures beyond the normal donation process.
             The risk of the research use of your sample or information is loss of confidentiality. Protections are in place to minimize this risk.
           </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5, marginBottom: 30}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             • Samples used by researchers are coded. Only authorized Red Cross personnel can link coded samples to a donor’s identifying information.
           </Text>
 
-          <Text style={styles.text}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             The Red Cross does not share your identifying information with other entities, except as required by law and in limited circumstances
             with research partners who are bound by strict privacy and data protection requirements. An independent committee
-            [the Institutional Review Board (IRB)] approves all American Red Cross research using donor samples or information.
+            [the Institutional Review Board (IRB)] approves all Philippine Red Cross research using donor samples or information.
             The IRB is government regulated and is established to protect your rights and welfare.
           </Text>
 
-        <Text style={styles.subtitle}>How might your sample be tested and will you be informed of results?</Text>
-          <Text style={[styles.text2, {fontSize: 10.5}]}>
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>How might your sample be tested and will you be informed of results?</Text>
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
             • We may use samples linked to your identifying information for infectious disease testing to provide a safe blood supply.
           </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5, marginBottom: 30}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             • We will notify you in person, by phone, by letter, or electronically about any test results that are identified to you and that may impact your health,
             and we may invite you to participate in a follow-up study.
           </Text>
 
-        <Text style={styles.subtitle}>What will happen if your sample or information is stored?</Text>
-          <Text style={[styles.text2, {fontSize: 10.5}]}>
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>What will happen if your sample or information is stored?</Text>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
             • Your donor information, blood, and blood sample may be stored and made available for future research use indefinitely.
           </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             • Your identified sample and information will not be used for research unrelated to donor safety, blood safety and/or blood product efficacy, 
               and contributions to public health without your consent.
           </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5, marginBottom: 30}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             • If your sample is stored, only authorized Red Cross personnel can link it to your identifying information.
           </Text>
 
-        <Text style={styles.subtitle}>What are your rights?</Text>
-          <Text style={[styles.text2, {fontSize: 10.5}]}>
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>What are your rights?</Text>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
             • If you decide that you do not want your donation to be used for research, you will not be able to donate today. 
             It is very important to include blood donors and their donations in possible research studies to continue to provide a safe and effective blood supply.
           </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             • Participation in research is voluntary.
           </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             • You can discontinue participation at any time up until the start of blood collection. Your decision to not participate will not change your future relationship with the blood center.
           </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5, marginBottom: 30}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             • If you have any questions about the storage and use of your sample or information or you decide that you do not want your sample or information to be stored for research,
-            contact the Scientific Support Office at (866) 771-5534. However, test information collected before your withdrawal may still be used after your withdrawal.
+            contact the Scientific Support Office at (088) 856 8855. However, test information collected before your withdrawal may still be used after your withdrawal.
           </Text>
 
-        <Text style={styles.subtitle}>How to obtain more information</Text>
-          <Text style={styles.text}>
-            If you have questions about your rights as a research participant, or if you need to report potential harm related to research, call the American Red Cross Institutional Review Board administrator at (877) 738-0856.
+          <Text style={[styles.subtitle, {textAlign: 'justify', marginHorizontal: 10}]}>How to obtain more information</Text>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray'}]}>
+            If you have questions about your rights as a research participant, or if you need to report potential harm related to research, call the Philippine Red Cross Institutional Review Board administrator at (088) 856 8855.
           </Text>
         </View>
 
         <View>
-        <Text style={styles.title}> Medication Deferral List </Text>
+        <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold', fontSize: 20, marginHorizontal: 20}]}> MEDICATION DEFERRAL LIST </Text>
         </View>
 
         <View style={styles.contentContainer}>
 
-          <Text style={styles.text}>
-            DO NOT STOP taking medications prescribed by your doctor in order to donate blood.
+        <Text style={[styles.text2, { fontSize: 12, }]}>
+        <Text style={{fontFamily:'PoppinsBold'}}>DO NOT STOP</Text> taking medications prescribed by your doctor in order to donate blood.
           </Text>
 
-          <Text style={styles.text3}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10}]}>
             Donating while taking these drugs could have a negative effect on your health or on the health of the recipient of your blood.
           </Text>
 
-          <Text style={[styles.text, { textAlign: 'justify', fontSize: 12 }]}>
+          <Text style={[styles.text2, { fontSize: 12, marginVertical: 10}]}>
           Please tell us if you are being treated with{' '}
           <Text style={{ textDecorationLine: 'underline' }}>
             any
@@ -584,7 +588,7 @@ const Education = () => {
     </View>
 
     <View>
-      <Text style={[styles.title, {fontSize: 16,}]}> HIV Prevention ( also known as PrEP and PEP) </Text>
+       <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold', fontSize: 20, marginHorizontal: 20}]}> HIV PREVENTION ( also known as PrEP and PEP) </Text>
     </View>
 
     <View style={[styles.table, {marginBottom: 30}]}>
@@ -618,125 +622,121 @@ const Education = () => {
         
     </View>
 
-        <Text style={[styles.text3, { fontSize: 11.5}]}>
+      <Text style={[styles.text2, { fontSize: 12, marginVertical: 10, marginHorizontal: 30}]}>
           DO NOT STOP TAKING ANY PRESCRIBED MEDICATIONS IN ORDER TO DONATE BLOOD, INCLUDING PrEP and PEP MEDICATIONS
         </Text>
 
-        <Text style={[styles.text, {fontSize: 13}]}>
-          <Text style={{ fontWeight: "bold" }}>Anti-platelet agents affect platelet function</Text>, so people taking these drugs should not donate platelets
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10, marginHorizontal: 30}]}>
+        <Text style={{ fontFamily: 'PoppinsBold' }}>Anti-platelet agents affect platelet function Education, </Text> so people taking these drugs should not donate platelets
           for the indicated time. You may still be able to donate whole blood or red blood cells by apheresis.
         </Text>
 
-        <Text style={[styles.text, {fontSize: 13}]}>
-          <Text style={{ fontWeight: "bold" }}>Anticoagulants or "blood thinners"</Text> are used to treat or prevent blood clots in the legs, lungs,
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10, marginHorizontal: 30}]}>
+          <Text style={{ fontFamily: 'PoppinsBold' }}>Anticoagulants or "blood thinners"</Text> are used to treat or prevent blood clots in the legs, lungs,
           or other parts of the body, and to prevent strokes. These medications affect the blood’s ability to clot, which might cause excessive bruising
           or bleeding when you donate; You may still be able to donate whole blood or red blood cells by apheresis.
         </Text>
 
-        <Text style={[styles.text, {fontSize: 13}]}>
-          <Text style={{ fontWeight: "bold" }}>Isotretinoin, finasteride, dutasteride acitretin and etretinate</Text> can cause birth defects. Your donated blood
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10, marginHorizontal: 30}]}>
+        <Text style={{ fontFamily: 'PoppinsBold' }}>Isotretinoin, finasteride, dutasteride acitretin and etretinate</Text> can cause birth defects. Your donated blood
           could contain high enough levels to damage the unborn baby if transfused to a pregnant woman.
         </Text>
 
-        <Text style={[styles.text, {fontSize: 13}]}>
-          <Text style={{ fontWeight: "bold" }}>Thalomid (thalidomide), Revlimid (lenalidomide) Erivedge (Vismodegib), Odomzo (sonidegib), Aubagio (teriflunomide), and Rinvoq (upadacitinib)</Text> may cause
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10, marginHorizontal: 30}]}>
+        <Text style={{ fontFamily: 'PoppinsBold' }}>Thalomid (thalidomide), Revlimid (lenalidomide) Erivedge (Vismodegib), Odomzo (sonidegib), Aubagio (teriflunomide), and Rinvoq (upadacitinib)</Text> may cause
           birth defects or the death of an unborn baby if transfused to a pregnant woman.
         </Text>
 
-        <Text style={[styles.text, {fontSize: 13}]}>
-          <Text style={{ fontWeight: "bold" }}>Cellcept (mycophenolate mofetil) and Arava (leflunomide)</Text> are immunosuppressants that may cause birth defects or the death of an unborn
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10, marginHorizontal: 30}]}>
+        <Text style={{ fontFamily: 'PoppinsBold' }}>Cellcept (mycophenolate mofetil) and Arava (leflunomide)</Text> are immunosuppressants that may cause birth defects or the death of an unborn
           baby if transfused to a pregnant woman.
         </Text>
 
-        <Text style={[styles.text, {fontSize: 13}]}>
-          <Text style={{ fontWeight: "bold" }}>PrEP or pre-exposure prophylaxis</Text> involves taking a specific combination of oral medicines (short-acting antiviral PrEP) or injections
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10, marginHorizontal: 30}]}>
+        <Text style={{ fontFamily: 'PoppinsBold' }}>PrEP or pre-exposure prophylaxis</Text> involves taking a specific combination of oral medicines (short-acting antiviral PrEP) or injections
           (long-acting antiviral PrEP) as a prevention method for people who are HIV negative and at high risk of HIV infection. FDA has determined that the available data
           demonstrate that the use of PrEP or PEP may delay the detection of HIV by currently licensed screening tests for blood donations, potentially resulting in false negative results
           in infected individuals. Although “Undetectable = Untransmittable” for sexual transmission, this does not apply to transfusion transmission.
         </Text>
 
-        <Text style={[styles.text, {fontSize: 13}]}>
-          <Text style={{ fontWeight: "bold" }}>PEP or post-exposure prophylaxis</Text> is a short-acting treatment started as soon as possible after a high-risk exposure
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10, marginHorizontal: 30}]}>
+        <Text style={{ fontFamily: 'PoppinsBold' }}>PEP or post-exposure prophylaxis</Text> is a short-acting treatment started as soon as possible after a high-risk exposure
           to HIV to reduce the risk of infection. FDA has determined that the available data demonstrate that the use of PrEP or PEP may delay the detection of HIV by currently licensed
           screening tests for blood donations, potentially resulting in false negative results in infected individuals. Although “Undetectable = Untransmittable” for sexual transmission,
           this does not apply to transfusion transmission.
         </Text>
 
-        <Text style={[styles.text, {fontSize: 13}]}>
-          <Text style={{ fontWeight: "bold" }}>ART or antiretroviral therapy</Text> is the use of a combination of HIV medicines (called an HIV regimen) to treat HIV infection.
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10, marginHorizontal: 30}]}>
+        <Text style={{ fontFamily: 'PoppinsBold' }}>ART or antiretroviral therapy</Text> is the use of a combination of HIV medicines (called an HIV regimen) to treat HIV infection.
           HIV infection requires a permanent deferral despite treatment with ART. Antiretroviral drugs do not fully eliminate the virus from the body, and donated blood from individuals
           infected with HIV taking ART can potentially still transmit HIV to a transfusion recipient. Although “Undetectable = Untransmittable” for sexual transmission,
           this does not apply to transfusion transmission.
         </Text>
 
-        <Text style={[styles.text, {fontSize: 13}]}>
-          <Text style={{ fontWeight: "bold" }}>Hepatitis B Immune Globulin (HBIG)</Text> is an injected material used to prevent hepatitis B infection
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10, marginHorizontal: 30}]}>
+        <Text style={{ fontFamily: 'PoppinsBold' }}>Hepatitis B Immune Globulin (HBIG)</Text> is an injected material used to prevent hepatitis B infection
           following a possible or known exposure to hepatitis B. HBIG does not prevent hepatitis B infection in every case, therefore, persons who have
           received HBIG must wait to donate blood.
         </Text>
 
-        <Text style={[styles.text, {fontSize: 13}]}>
-          <Text style={{ fontWeight: "bold" }}>Experimental Medications</Text> are usually associated with a research study,
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10, marginHorizontal: 30}]}>
+        <Text style={{ fontFamily: 'PoppinsBold' }}>Experimental Medications</Text> are usually associated with a research study,
           and the effect on their safety of transfused blood is unknown.
         </Text>
 
       
       <View>
-        <Text style={styles.title}>
-        Important Information Regarding a Hepatitis A Outbreak
+      <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold', fontSize: 20, marginHorizontal: 10}]}> 
+        IMPORTANT INFORMATION REGARDING A HEPATITIS OUTBREAK
         </Text>
       </View>
 
-        <Text style={styles.subtitle}>
-        Thank you for coming in to donate today.
-        </Text>
-
-        <Text style={styles.text3}>
+      <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10, marginHorizontal: 30}]}>
         If you have been exposed to hepatitis A or advised
         to be vaccinated for hepatitis A because of an
         exposure at a restaurant or other food establishment,
         please do not donate today and refrain from donating for 4 months.
         </Text>
 
-        <Text style={[styles.text3, { fontSize: 10}]}>
+        <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold'}]}>
           DO NOT DONATE TODAY.
         </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5}]}>
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginHorizontal: 30}]}>
             • We regard you as having been exposed to a hepatitis A outbreak.
           </Text>
 
-          <Text style={[styles.text2, {fontSize: 10.5, marginBottom: 30}]}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginVertical: 10, marginHorizontal: 30}]}>
             • Please wait for four months after you ate or drank at this location before coming again to donate.
           </Text>
 
-        <Text style={styles.text}>
+          <Text style={[styles.text2, { fontSize: 12, color: 'gray',  marginHorizontal: 30}]}>
          For more information about a Hepatitis A outbreak and any precautions you need to take, please contact your local health department.
         </Text>
 
       <View>
-        <Text style={[styles.title, {fontSize: 42}]}>
-        Fact Sheet: Check Your Race
+      <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold', fontSize: 20, marginHorizontal: 20}]}> 
+        FACE SHEET: CHECK YOUR RACE
         </Text>
       </View>
 
-        <Text style={[styles.text, {fontSize: 10}]}>
-          <Text style={{ fontWeight: "bold" }}>Check your race during your health history today</Text> – and know you
+      <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginHorizontal: 30}]}>
+        <Text style={{ fontFamily: 'PoppinsBold' }}>Check your race during your health history today</Text> – and know you
           could be helping individuals with sickle cell disease and rare blood types.
         </Text>
 
-      <Text style={styles.title}>
-      Blood types can be specific to race.
-      </Text>
+        <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold', fontSize: 20, marginHorizontal: 20}]}> 
+        BLOOD TYPES CAN BE SPECIFIC RACE.
+        </Text>
 
-        <Text style={styles.text}>
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginHorizontal: 30}]}>
         Red blood cells carry markers called antigens on their surface that determine one’s blood type. Most are one of the
         following categories: A, B, AB, and O. There are more than 600 known antigens, and some are unique to specific racial and ethnic groups.
         For example, many African Americans and people of African descent have rare blood types, such as types U negative and Duffy negative.
         Patients who have rare blood types or receive frequent blood transfusions need close blood type matches.
         </Text>
 
-        <Text style={styles.text}>
+        <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginHorizontal: 30, marginVertical: 10}]}>
         The Red Cross asks all donors to provide their race during the health history process.
         Selecting your race will notify our laboratories to conduct extra screening. The laboratories screen
         to determine if your blood donations can help people with sickle cell disease or rare blood types.
@@ -744,11 +744,11 @@ const Education = () => {
         often comes from donors of the same race or similar ethnicity.
         </Text>
 
-      <Text style={styles.title}>
-      Increasing the number of blood donors from all racial and ethnic groups is vital.
+        <Text style={[styles.subtitle, {fontFamily: 'PoppinsBold', fontSize: 20, marginHorizontal: 20}]}>
+      INCREASING THE NUMBER OF BLOOD DONORS FROM ALL RACIAL AND ETHNIC GROUPS IS VITAL.
       </Text>
 
-        <Text style={styles.text}>
+      <Text style={[styles.text2, { fontSize: 12, color: 'gray', marginHorizontal: 30, marginVertical: 10}]}>
         Blood that is closely matched between donor and patient can lower the risk of patients developing complications. This is especially important for those
         receiving ongoing blood transfusions. If a patient receives a transfusion that isn’t an exact match to their blood type, they develop antibodies to the foreign antigens.
         If the patient receives another transfusion in the future with the same mismatch, it can be fatal. It is vital that our blood supply reflects the diversity of our population to best meet the needs of all.
@@ -757,7 +757,7 @@ const Education = () => {
         </Text>
 
       <View>
-        <Text style={[styles.title, {fontSize: 20}]}>
+      <Text style={{ fontSize: 10, color: 'gray', marginHorizontal: 30, marginVertical: 10, textAlign: 'justify',}}>
         You can help the Red Cross provide the most compatible blood to help meet the needs of patients from all backgrounds.
         </Text>
       </View>
@@ -777,9 +777,18 @@ const styles = StyleSheet.create({
     color: 'black',
     marginVertical: 10,
     marginTop: 20,
-    fontSize: 20,
+    fontSize: 25,
     marginHorizontal: 10,
   },
+
+  resultImg: {
+    height: 120,
+    width: 120,
+    resizeMode: "contain",
+    marginVertical: 5,
+    alignSelf:'center'
+  },
+
   subtitle: {
     fontFamily: 'Poppins',
     fontSize: 14,
@@ -803,6 +812,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     textAlign: 'justify',
     marginHorizontal: 10,
+    
   },
   text3: {
     fontFamily: 'Poppins',
