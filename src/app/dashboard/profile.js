@@ -436,7 +436,7 @@ const Profile = ({ navigation }) => {
             .from("blood_type")
             .update(updatedBloodType)
             .eq("auth_id", authId);
-  
+
           if (bloodUpdateError) {
             console.error("Error updating blood type data:", bloodUpdateError.message);
             alert("Error updating blood type.");
