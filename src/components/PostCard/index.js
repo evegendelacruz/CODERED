@@ -115,7 +115,6 @@ const PostCard = ({ post }) => {
           .single();
 
         if (userError) {
-          console.error("Error fetching user data:", userError.message);
           setUserFullName("Name not available");
           return;
         }
