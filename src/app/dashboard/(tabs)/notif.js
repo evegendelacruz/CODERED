@@ -1,70 +1,175 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import FontAwesome from 'react-native-vector-icons/FontAwesome6';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import * as Notifications from 'expo-notifications';
-
-
-// Function to calculate time difference
-const timeAgo = (timestamp) => {
-  const now = Date.now();
-  const diff = now - timestamp; // Difference in milliseconds
-
-  const seconds = Math.floor(diff / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-
-  if (seconds < 60) {
-    return 'Just Now';
-  } else if (minutes < 60) {
-    return `${minutes} min ago`;
-  } else if (hours < 24) {
-    return `${hours} hr ago`;
-  } else {
-    return `${days} day${days > 1 ? 's' : ''} ago`;
-  }
-};
+import { supabase } from './../../../../src/utils/supabase';
+import { formatDistanceToNow } from 'date-fns';
+import { AntDesign, Entypo, Feather } from '@expo/vector-icons';
 
 const Notification = () => {
   const route = useRoute();
-  const navigation = useNavigation(); // Get navigation prop
-  const { newEvent } = route.params || {}; // Get new event passed from navigation
-  console.log("Received newEvent:", newEvent); // Debug log
+  const navigation = useNavigation();
+  const { newEvent } = route.params || {};
 
-  // Manage notifications state
+  const [accountType, setAccountType] = useState('user');
   const [notifications, setNotifications] = useState([]);
 
-  // Add new events to notifications when they arrive
   useEffect(() => {
-    if (newEvent) {
-      console.log("Adding new event to notifications:", newEvent); // Debug log
-      setNotifications((prev) => [
-        { id: Date.now(), ...newEvent, timestamp: Date.now(), isRead: false },
-        ...prev,
-      ]);
-    }
+    const fetchUserDetails = async () => {
+      const user = supabase.auth.user();
+      if (user) {
+        const { data, error } = await supabase
+          .from('users')
+          .select('account_type')
+          .eq('id', user.id)
+          .single();
+
+        if (data?.account_type) {
+          setAccountType(data.account_type);
+        } else if (error) {
+          console.error('Error fetching user details:', error);
+        }
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      const { data, error } = await supabase
+        .from('notifications')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (data) {
+        setNotifications(data);
+      } else if (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+  useEffect(() => {
+    const addEventToNotifications = async () => {
+      if (newEvent?.title && newEvent?.date) {
+        try {
+          const { error } = await supabase
+            .from('notifications')
+            .insert([
+              {
+                title: newEvent.title,
+                date: newEvent.date,
+                created_at: new Date().toISOString(),
+              },
+            ]);
+  
+          if (!error) {
+            Toast.show({
+              type: 'customSuccess',
+              text1: 'Success!',
+              text2: `The event "${newEvent.title}" was successfully added!`,
+            });
+  
+            // Add the new event to the notifications state
+            setNotifications((prevNotifications) => [
+              ...prevNotifications,
+              {
+                title: newEvent.title,
+                date: newEvent.date,
+                created_at: new Date().toISOString(),
+                id: Date.now(), // Assuming the id is generated or needs to be unique
+              },
+            ]);
+          }
+        } catch (error) {
+          console.error('Error adding event to notifications:', error);
+          Toast.show({
+            type: 'customError',
+            text1: 'Error',
+            text2: 'Failed to add event to the Calendar.',
+          });
+        }
+      }
+    };
+  
+    addEventToNotifications();
+    
   }, [newEvent]);
-
-  // Mark notifications as read
-  const markAsRead = (id) => {
-    setNotifications((prev) =>
-      prev.map((notification) =>
-        notification.id === id ? { ...notification, isRead: true } : notification
-      )
-    );
+    const handlePress = async (item) => {
+    try {
+      if (!item?.id) {
+        return;
+      }
+  
+      if (accountType === 'user') {
+        await markAsRead(item.id);
+      }
+  
+      navigation.navigate('event', { eventId: item.id });
+    } catch (error) {
+      // Error handling can be added here if needed
+    }
   };
+  
+  const markAsRead = async (id) => {
+    try {
+      const { error } = await supabase
+        .from('notifications')
+        .update({ is_read: true })
+        .eq('id', id);
+  
+      if (error) {
+        // Handle error if necessary
+      }
+    } catch (error) {
+      // Handle unexpected errors
+    }
+  };
+  
+  const timeAgo = (timestamp) => {
+    try {
+      return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
+    } catch (error) {
+      return 'Invalid date';
+    }
+  };
+  
 
-  // Handle notification press
-  const handleNotificationPress = (item) => {
-    markAsRead(item.id); // Mark the notification as read
-    // Navigate to the EventDetails screen and pass the selected event
-    navigation.navigate('event', { selectedEvent: item });
+  const toastConfig = {
+    customSuccess: ({ text1, text2 }) => (
+      <BaseToast
+        style={[styles.toastContainer, { borderLeftColor: '#28a745' }]} 
+        contentContainerStyle={styles.contentContainer}
+        text1Style={styles.successText1}
+        text2Style={styles.text2}
+        text1={text1}
+        text2={text2}
+        renderLeadingIcon={() => (
+          <AntDesign name="checkcircle" size={30} color="green" style={styles.icon} />
+        )}
+      />
+    ),
+    customError: ({ text1, text2 }) => (
+      <ErrorToast
+        style={[styles.toastContainer, { borderLeftColor: '#dc3545' }]} // Red for error
+        contentContainerStyle={styles.contentContainer}
+        text1Style={styles.errorText1}
+        text2Style={styles.text2}
+        text1={text1}
+        text2={text2}
+        renderLeadingIcon={() => (
+          <Entypo name="circle-with-cross" size={30} color="red" style={styles.icon} />
+        )}
+      />
+    ),
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'lightgray' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f4f4f4' }}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Notifications</Text>
       </View>
@@ -73,35 +178,33 @@ const Notification = () => {
         {notifications.length > 0 ? (
           <FlatList
             data={notifications}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item?.id?.toString() || ''}
             renderItem={({ item }) => (
               <TouchableOpacity
-                style={[styles.notificationCard, item.isRead && styles.notificationRead]}
-                onPress={() => handleNotificationPress(item)} // Navigate when pressed
+                style={styles.notificationCard}
+                onPress={() => handlePress(item)}
               >
-                <View style={styles.iconContainer}>
-                  <View style={styles.iconPlaceholder}>
-                    <FontAwesome name="calendar" size={20} color="red" />
-                  </View>
-                </View>
-                <View style={styles.content}>
-                  <Text style={[styles.title, item.isRead && styles.textRead]}>
-                    {item.title}
-                  </Text>
-                  <Text style={[styles.description, item.isRead && styles.textRead]}>
-                    Scheduled on: {item.date}
-                  </Text>
-                </View>
-                <Text style={styles.timestamp}>
-                  {item.isRead ? 'Read' : timeAgo(item.timestamp)}
+              
+              <View style={styles.notificationContent}>
+              <View style={styles.iconContainer}>
+                <Entypo name="calendar" size={21} color="red"/>
+              </View>
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>Event Reminder!</Text>
+                <Text style={styles.description}>
+                  Don't miss the upcoming <Text style={styles.event}>{item.title}</Text> event. Join us on <Text style={styles.event}>{item.date}</Text> for a heroic experience. Your participation can save lives. See you there!
                 </Text>
-              </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableOpacity>
             )}
           />
         ) : (
           <Text style={styles.noNotifications}>No new notifications</Text>
         )}
       </View>
+
+      <Toast config={toastConfig} />
     </SafeAreaView>
   );
 };
@@ -117,29 +220,40 @@ const styles = StyleSheet.create({
     fontFamily: 'PoppinsBold',
     fontSize: 20,
     color: 'red',
-    paddingLeft: 13,
+    paddingLeft: 18,
   },
-  container: { flex: 1, padding: 16, backgroundColor: '#f1f1f1'  },
+  container: {
+    flex: 1,
+    padding: 16,
+  },
   notificationCard: {
-    flexDirection: 'row',
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 16,
     marginBottom: 8,
-    elevation: 2,
-  },
-  notificationRead: {
-    backgroundColor: '#f0f0f0',
     borderColor: 'gray',
-    borderWidth: 0.2,
+    borderWidth: 0.3,
+   
   },
-  iconContainer: { justifyContent: 'center', alignItems: 'center', marginRight: 12 },
-  iconPlaceholder: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
-  content: { flex: 1 },
-  title: { fontFamily: 'PoppinsBold', fontSize: 14, color: '#333', marginBottom: 4 },
-  description: { fontFamily: 'Poppins', fontSize: 12, color: '#666' },
-  textRead: { color: '#aaa' },
-  timestamp: { fontSize: 11, color: '#999', alignSelf: 'center' },
+  content: {
+    flexDirection: 'column',
+  },
+  title: {
+    fontFamily: 'PoppinsBold',
+    fontSize: 14,
+    color: '#333',
+  },
+  description: {
+    fontFamily: 'Poppins',
+    fontSize: 11,
+    color: '#666',
+    textAlign: 'justify'
+  },
+  timeAgo: {
+    fontFamily: 'PoppinsItalic',
+    fontSize: 10,
+    color: '#999',
+  },
   noNotifications: {
     textAlign: 'center',
     fontFamily: 'Poppins',
@@ -147,6 +261,65 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 20,
   },
+
+  icon:{
+    alignSelf:'center',
+    marginHorizontal: 20,
+  },
+
+  successText1: {
+    fontFamily: 'PoppinsBold',
+    fontSize: 14,
+    marginLeft: -25,
+  },
+
+  text2: {
+    fontSize: 13,
+    fontFamily: 'Poppins',
+    color: '#6c757d',
+    flexWrap: 'wrap',  
+    marginLeft: -25,
+    maxWidth: '100%', 
+  },
+
+  text1: {
+    fontFamily: 'PoppinsBold'
+  },
+
+  errorText1: {
+    fontFamily: 'PoppinsBold',
+    fontSize: 14,
+    marginLeft: -25
+  },
+
+  notificationContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+  textContainer: {
+    marginLeft: 15, 
+    marginHorizontal: 40
+  },
+  event: {
+    fontFamily: 'PoppinsBold',
+    color: 'black'
+  },
+
+  schedule: {
+    fontFamily: 'PoppinsBold',
+    color: 'black'
+  },
+
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 30,
+    backgroundColor:  'rgba(255, 105, 180, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: -2,
+},
 });
 
 export default Notification;
