@@ -17,56 +17,66 @@ const Interaction = ({ requestId }) => {
     const [profileImage, setProfileImage] = useState(null);
     
     useEffect(() => {
-        const fetchUserData = async () => {
-          try {
-            // Check if user is authenticated by getting the session
-            const { data: authSession, error: authError } = await supabase.auth.getSession();
-        
-            if (authError || !authSession?.session?.user?.id) {
-              console.error("User not authenticated or session expired");
-              return; // Exit if no session or user ID is found
-            }
+      const fetchUserData = async () => {
+        try {
+          // Check if user is authenticated by getting the session
+          const { data: authSession, error: authError } = await supabase.auth.getSession();
     
-            const authId = authSession.session.user.id;  // Use the session's user ID
-            setAuthId(authId);
+          if (authError || !authSession?.session?.user?.id) {
+            console.error("User not authenticated or session expired");
+            return; // Exit if no session or user ID is found
+          }
     
-            // Fetch user full name from the database using auth_id
-            const { data: userData, error: userError } = await supabase
-              .from("user")
-              .select("user_firstname, user_middlename, user_lastname")
-              .eq("auth_id", authId) // Use authId from session
+          const authId = authSession.session.user.id;  // Use the session's user ID
+          setAuthId(authId);
+    
+          // First, check in the 'user' table for user data
+          let { data: userData, error: userError } = await supabase
+            .from("user")
+            .select("user_firstname, user_middlename, user_lastname")
+            .eq("auth_id", authId) // Use authId from session
+            .single();
+    
+          // If the user is not found in the 'user' table, check in the 'organization' table
+          if (userError || !userData) {
+            const { data: orgData, error: orgError } = await supabase
+              .from("organization")
+              .select("org_name")
+              .eq("auth_id", authId)
               .single();
-        
-            if (userError) {
+    
+            if (orgError || !orgData) {
               setUserFullName("Name not available");
-              return;
+            } else {
+              // If found in the organization table, set the organization name
+              setUserFullName(orgData.org_name);
             }
-        
-            // Combine firstname, middlename, and lastname
+          } else {
+            // If user data found, combine firstname, middlename, and lastname
             const fullName = `${userData.user_firstname || ""} ${userData.user_middlename || ""} ${userData.user_lastname || ""}`.trim();
             setUserFullName(fullName || "Name not available");
-        
-            // Fetch user profile image
-            const filePath = `user_profile/${authId}.jpg`; // File path for the user's profile image
-            const { data: profilePicData, error: picError } = await supabase.storage
-              .from("uploads")
-              .getPublicUrl(filePath);
-        
-            if (picError) {
-              console.error("Error fetching profile picture:", picError.message);
-              setProfileImage("https://via.placeholder.com/40"); // Fallback to a placeholder image
-            } else {
-              setProfileImage(profilePicData?.publicUrl || "https://via.placeholder.com/40");
-            }
-        
-          } catch (error) {
-            console.error("Error fetching user data:", error.message);
           }
-        };
-        
-        fetchUserData();
-      }, []);
- 
+    
+          // Fetch user profile image
+          const filePath = `user_profile/${authId}.jpg`; // File path for the user's profile image
+          const { data: profilePicData, error: picError } = await supabase.storage
+            .from("uploads")
+            .getPublicUrl(filePath);
+    
+          if (picError) {
+            console.error("Error fetching profile picture:", picError.message);
+            setProfileImage("https://via.placeholder.com/40"); // Fallback to a placeholder image
+          } else {
+            setProfileImage(profilePicData?.publicUrl || "https://via.placeholder.com/40");
+          }
+    
+        } catch (error) {
+          console.error("Error fetching user data:", error.message);
+        }
+      };
+    
+      fetchUserData();
+    }, []);
   
     const fetchProfileImage = async () => {
       try {
@@ -184,89 +194,111 @@ const Interaction = ({ requestId }) => {
 };
 
 const fetchLikesAndComments = async () => {
-    try {
-      if (!requestId) {
-        console.error("No requestId provided to Interaction component.");
-        return;
-      }
-  
-      // Fetch the like count for the specific request_id
-      const { data: likesData, error: likeError } = await supabase
-        .from('response_like')
-        .select('*', { count: 'exact' })
-        .eq('request_id', requestId);
-  
-      if (likeError) {
-        console.error("Error fetching likes:", likeError.message);
-        return;
-      }
-  
-      setLikeCount(likesData?.length || 0);
-  
-      // Check if the user has liked this post
-      const { data: userLikeData, error: userLikeError } = await supabase
-        .from('response_like')
-        .select('*')
-        .eq('auth_id', authId)
-        .eq('request_id', requestId)
-        .limit(1)
-        .single();
-  
-      if (userLikeError && userLikeError.code !== 'PGRST116') {
-        console.error("Error checking user like:", userLikeError.message);
-        return;
-      }
-  
-      setIsLiked(!!userLikeData);
-  
-      // Fetch all comments for the specific request_id
-      const { data: commentsData, error: commentError } = await supabase
-        .from('response_comment')
-        .select('comment, auth_id')
-        .eq('request_id', requestId);
-  
-      if (commentError) {
-        console.error("Error fetching comments:", commentError.message);
-        return;
-      }
-  
-      // Fetch user details for each comment (name and profile picture)
-      const commentsWithUserData = await Promise.all(
-        commentsData.map(async (comment) => {
-          const { data: userData, error: userError } = await supabase
-            .from('user')
-            .select('user_firstname, user_middlename, user_lastname')
+  try {
+    if (!requestId) {
+      console.error("No requestId provided to Interaction component.");
+      return;
+    }
+
+    // Fetch the like count for the specific request_id
+    const { data: likesData, error: likeError } = await supabase
+      .from('response_like')
+      .select('*', { count: 'exact' })
+      .eq('request_id', requestId);
+
+    if (likeError) {
+      console.error("Error fetching likes:", likeError.message);
+      return;
+    }
+
+    setLikeCount(likesData?.length || 0);
+
+    // Check if the user has liked this post
+    const { data: userLikeData, error: userLikeError } = await supabase
+      .from('response_like')
+      .select('*')
+      .eq('auth_id', authId)
+      .eq('request_id', requestId)
+      .limit(1)
+      .single();
+
+    if (userLikeError && userLikeError.code !== 'PGRST116') {
+      console.error("Error checking user like:", userLikeError.message);
+      return;
+    }
+
+    setIsLiked(!!userLikeData);
+
+    // Fetch all comments for the specific request_id
+    const { data: commentsData, error: commentError } = await supabase
+      .from('response_comment')
+      .select('comment, auth_id')
+      .eq('request_id', requestId);
+
+    if (commentError) {
+      console.error("Error fetching comments:", commentError.message);
+      return;
+    }
+
+    // Fetch user details for each comment (name and profile picture)
+    const commentsWithUserData = await Promise.all(
+      commentsData.map(async (comment) => {
+        let fullName = "Name not available";
+        let profileImage = "https://via.placeholder.com/40"; // Default placeholder
+
+        // First, try to fetch user details from the 'user' table
+        const { data: userData, error: userError } = await supabase
+          .from('user')
+          .select('user_firstname, user_middlename, user_lastname')
+          .eq('auth_id', comment.auth_id)
+          .single();
+
+        if (userError || !userData) {
+          // If user not found, check the 'organization' table
+          const { data: orgData, error: orgError } = await supabase
+            .from('organization')
+            .select('org_name')
             .eq('auth_id', comment.auth_id)
             .single();
-  
-          if (userError) {
-            console.error("Error fetching user data for comment:", userError.message);
+
+          if (orgError || !orgData) {
+            console.error("Error fetching data for comment:", orgError?.message || "Organization not found");
+          } else {
+            fullName = orgData.org_name; // Set organization name if found
           }
-  
-          const fullName = `${userData?.user_firstname || ""} ${userData?.user_middlename || ""} ${userData?.user_lastname || ""}`.trim();
-  
-          // Fetch profile image for the user
-          const filePath = `user_profile/${comment.auth_id}.jpg`; // File path for the user's profile image
-          const { data: profilePicData, error: picError } = await supabase.storage
-            .from("uploads")
-            .getPublicUrl(filePath);
-  
-          const profileImage = picError ? "https://via.placeholder.com/40" : profilePicData?.publicUrl;
-  
-          return {
-            ...comment,
-            fullName,
-            profileImage,
-          };
-        })
-      );
-  
-      setComments(commentsWithUserData);
-      setCommentCount(commentsWithUserData.length);
-    } catch (error) {
-      console.error("Error fetching likes and comments:", error.message);
-    }
-  };
+        } else {
+          // If user data is found, combine firstname, middlename, and lastname
+          fullName = `${userData?.user_firstname || ""} ${userData?.user_middlename || ""} ${userData?.user_lastname || ""}`.trim();
+        }
+
+        // Fetch the latest profile image for the user or organization
+        const { data: profilePicData, error: picError } = await supabase.storage
+          .from("uploads")
+          .getPublicUrl(`user_profile/${comment.auth_id}.jpg`);
+
+        if (picError) {
+          console.error("Error fetching profile picture:", picError.message);
+          profileImage = "https://via.placeholder.com/40"; // Default placeholder
+        } else {
+          profileImage = `${profilePicData?.publicUrl}?t=${Date.now()}`; // Add timestamp to get latest image
+        }
+
+        return {
+          ...comment,
+          fullName,
+          profileImage,
+        };
+      })
+    );
+
+    setComments(commentsWithUserData);
+    setCommentCount(commentsWithUserData.length);
+  } catch (error) {
+    console.error("Error fetching likes and comments:", error.message);
+  }
+};
+
+
   
   const subscribeToLikesAndComments = (requestId) => {
     if (!requestId) return;

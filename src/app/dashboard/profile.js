@@ -221,8 +221,6 @@ const Profile = ({ navigation }) => {
     }
 
     try {
-      // Log the image URI to verify it's valid
-      console.log("Uploading image from URI:", imageUri);
 
       const { data: authUser, error: authError } =
         await supabase.auth.getUser();
