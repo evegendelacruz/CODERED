@@ -103,11 +103,10 @@ const PostCard = ({ post }) => {
     if (bagQuantity > 1) setBagQuantity(bagQuantity - 1);
   };
 
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Fetch user full name
+        // Try fetching from the 'user' table
         const { data: userData, error: userError } = await supabase
           .from("user")
           .select("user_firstname, user_middlename, user_lastname")
@@ -115,28 +114,110 @@ const PostCard = ({ post }) => {
           .single();
 
         if (userError) {
-          setUserFullName("Name not available");
+          // If no user found, check the 'organization' table
+          const { data: orgData, error: orgError } = await supabase
+            .from("organization")
+            .select("org_name")
+            .eq("auth_id", auth_id)
+            .single();
+
+          if (orgError) {
+            setUserFullName("Name or Organization not available");
+            return;
+          }
+
+          // If found in 'organization', set the org_name
+          setUserFullName(orgData.org_name || "Organization not available");
+          setRelativeTime(getRelativeTime(request_created_at));
           return;
         }
 
-        // Combine firstname, middlename, and lastname
+        // If found in 'user', combine firstname, middlename, and lastname
         const fullName = `${userData.user_firstname || ""} ${
           userData.user_middlename || ""
         } ${userData.user_lastname || ""}`.trim();
         setUserFullName(fullName || "Name not available");
-
-        // Calculate relative time
         setRelativeTime(getRelativeTime(request_created_at));
       } catch (error) {
-        console.error("Error fetching user full name:", error.message);
-        setUserFullName("Name not available");
+        console.error("Error fetching user or organization data:", error.message);
+        setUserFullName("Name or Organization not available");
       }
     };
 
+    // Create real-time subscription for the user table
+    const userChannel = supabase
+      .channel('user_channel')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'user' },
+        payload => {
+          if (payload.new.auth_id === auth_id) {
+            fetchUserData();
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'user' },
+        payload => {
+          if (payload.new.auth_id === auth_id) {
+            fetchUserData();
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'user' },
+        payload => {
+          if (payload.old.auth_id === auth_id) {
+            setUserFullName("Name or Organization not available");
+          }
+        }
+      )
+      .subscribe();
+
+    // Create real-time subscription for the organization table
+    const orgChannel = supabase
+      .channel('org_channel')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'organization' },
+        payload => {
+          if (payload.new.auth_id === auth_id) {
+            fetchUserData();
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'organization' },
+        payload => {
+          if (payload.new.auth_id === auth_id) {
+            fetchUserData();
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'organization' },
+        payload => {
+          if (payload.old.auth_id === auth_id) {
+            setUserFullName("Name or Organization not available");
+          }
+        }
+      )
+      .subscribe();
+
+    // Call the fetch function initially
     fetchUserData();
+
+    // Cleanup function to remove subscriptions when the component unmounts
+    return () => {
+      supabase.removeChannel(userChannel);
+      supabase.removeChannel(orgChannel);
+    };
   }, [auth_id, request_created_at]);
 
-  
 
   useEffect(() => {
     const checkAuthenticatedUser = async () => {
@@ -215,38 +296,38 @@ const PostCard = ({ post }) => {
     setRelativeTime(getRelativeTime(request_created_at));
   }, 60000); // Update every minute
 
-  // Function to fetch user profile image
-  const fetchProfileImage = async () => {
-    try {
-      const { data: authUser, error: authError } =
-        await supabase.auth.getUser();
-      if (authError || !authUser) {
-        console.error("Error fetching authenticated user:", authError?.message);
-        return;
+    // Function to fetch user profile image
+    const fetchProfileImage = async () => {
+      try {
+        const { data: authUser, error: authError } =
+          await supabase.auth.getUser();
+        if (authError || !authUser) {
+          console.error("Error fetching authenticated user:", authError?.message);
+          return;
+        }
+
+        const filePath = `user_profile/${auth_id}.jpg`; // File path for the user's profile image
+
+        const { data: profilePicData, error: picError } = await supabase.storage
+          .from("uploads")
+          .getPublicUrl(filePath);
+
+        if (picError) {
+          console.error("Error fetching profile picture:", picError.message);
+          return;
+        }
+
+        return `${profilePicData?.publicUrl}?t=${Date.now()}`;
+      } catch (error) {
+        console.error("Error fetching profile image:", error.message);
       }
+    };
 
-      const filePath = `user_profile/${auth_id}.jpg`; // File path for the user's profile image
+    const [profileImage, setProfileImage] = useState(null);
 
-      const { data: profilePicData, error: picError } = await supabase.storage
-        .from("uploads")
-        .getPublicUrl(filePath);
-
-      if (picError) {
-        console.error("Error fetching profile picture:", picError.message);
-        return;
-      }
-
-      return profilePicData?.publicUrl;
-    } catch (error) {
-      console.error("Error fetching profile image:", error.message);
-    }
-  };
-
-  const [profileImage, setProfileImage] = useState(null);
-
-  useEffect(() => {
-    fetchProfileImage().then((url) => setProfileImage(url));
-  }, []);
+    useEffect(() => {
+      fetchProfileImage().then((url) => setProfileImage(url));
+    }, []);
 
   const [postImage, setPostImage] = useState(noimage);
 
@@ -607,34 +688,34 @@ const PostCard = ({ post }) => {
   </View>
 
   <View style={styles.content}>
-    <Text style={styles.title}>📢 Calling for Blood Donation!</Text>
+    <Text style={styles.title}>🚨 Calling for Blood Donation!🚨</Text>
     <Text style={styles.subTitle}>{request_caption}</Text>
     <View style={styles.detailsContainer}>
       <Text
         style={[
           styles.details,
-          { color: "gray", fontFamily: "PoppinsBold" },
+          { color: "black", fontFamily: "PoppinsBold" },
         ]}
       >
         Blood Request Details:
       </Text>
       <Text style={styles.details}>
-        Blood Recipient: <Text style={{ color: "black" }}>{request_recipient}</Text>
+        Blood Recipient: <Text style={{ fontFamily: 'PoppinsBold' }}>{request_recipient}</Text>
       </Text>
       <Text style={styles.details}>
-        Blood Type: <Text style={{ color: "black" }}>{request_blood_type}</Text>
+        Blood Type: <Text style={{ fontFamily: 'PoppinsBold' }}>{request_blood_type}</Text>
       </Text>
       <Text style={styles.details}>
-        Bag/s Needed: <Text style={{ color: "black" }}>{request_bag_qnty}</Text>
+        Bag/s Needed: <Text style={{ fontFamily: 'PoppinsBold' }}>{request_bag_qnty}</Text>
       </Text>
       <Text style={styles.details}>
-        Urgency Level: <Text style={{ color: "black" }}>{request_urgency_lvl}</Text>
+        Urgency Level: <Text style={{ fontFamily: 'PoppinsBold' }}>{request_urgency_lvl}</Text>
       </Text>
       <Text style={styles.details}>
-        Donation Status: <Text style={{ color: "black" }}>{request_donation_status}</Text>
+        Donation Status: <Text style={{ fontFamily: 'PoppinsBold' }}>{request_donation_status}</Text>
       </Text>
       <Text style={styles.details}>
-        Hospital: <Text style={{ color: "black" }}>{request_hospital}</Text>
+        Hospital: <Text style={{ fontFamily: 'PoppinsBold' }}>{request_hospital}</Text>
       </Text>
     </View>
   </View>
@@ -747,7 +828,7 @@ const styles = StyleSheet.create({
     fontFamily: "PoppinsBold",
   },
   userName: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: "PoppinsBold",
   },
   postTime: {
@@ -768,19 +849,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "PoppinsBold",
-    fontSize: 16,
-    marginVertical: 10,
+    fontSize: 14,
   },
   subTitle: {
-    fontSize: 14,
-    marginBottom: 3,
+    fontSize: 13,
     fontFamily: "Poppins",
   },
   details: {
-    fontSize: 14,
-    color: "gray",
-    marginTop: 5,
-    fontFamily: "Poppins",
+    fontSize: 13,
+    color: "black",
+    fontFamily: 'Poppins'
   },
   menu: {
     backgroundColor: "white",
