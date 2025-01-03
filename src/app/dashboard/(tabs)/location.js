@@ -8,10 +8,11 @@ const Location = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('map');
   const [selectedHospital, setSelectedHospital] = useState(null);
+  const [selectedView, setSelectedView] = useState(null);
 
   const hospitals = [
     {
-      name: "Philippine Red Cross",
+      name: "Philippine Red Cross Misamis Oriental - Cagayan de Oro Chapter",
       address: "Philippine Red Cross Building, Capitol Compound, Cagayan de Oro, Misamis Oriental",
       image: require("../../../assets/redcross.png"),
     },
@@ -85,14 +86,14 @@ const Location = () => {
 
           {/* View Mode Toggle Section */}
           <View style={{ flexDirection: 'row', justifyContent: 'center', backgroundColor: 'red', alignItems: 'center', paddingBottom: 0 }}>
-            <TouchableOpacity onPress={() => handleViewChange('map')} style={{ padding: 10, borderRadius: 5, marginHorizontal: 20 }}>
+            <TouchableOpacity onPress={() => handleViewChange('map')} style={{ padding: 10, borderRadius: 5, marginHorizontal: 20, }}>
               <Text style={{ color: 'white' }}>MAP VIEW</Text>
             </TouchableOpacity>
 
             <View style={{ width: 1, height: '50%', backgroundColor: 'white', textAlign: 'center', alignItems: 'center' }} />
 
             <TouchableOpacity onPress={() => handleViewChange('list')} style={{ padding: 10, borderRadius: 5, marginHorizontal: 20 }}>
-              <Text style={{ color: 'white' }}>LIST VIEW</Text>
+              <Text style={{ color: 'white',  }}>LIST VIEW</Text>
             </TouchableOpacity>
           </View>
 
@@ -145,7 +146,7 @@ const Location = () => {
                         backgroundColor: "white",
                         paddingVertical: 10,
                         paddingHorizontal: 10,
-                        marginTop: -65, // Adjusted for better spacing
+                        marginTop: 0,
                       }}
                       onPress={() => openMapWithQuery(hospital.address)} // Open map with hospital address
                     >
