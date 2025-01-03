@@ -120,13 +120,6 @@ const RootLayout = () => {
                 fontSize: 20,
               },
               headerTitleAlign: 'center',
-
-              // Adding the right icon to the header
-              headerRight: () => (
-                <TouchableOpacity>
-                  <Feather name="edit" size={23} color="white" style={{ marginRight: 10 }} />
-                </TouchableOpacity>
-              ),
             })}
           />
           </Stack>
