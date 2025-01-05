@@ -47,17 +47,14 @@ const Blood = () => {
           ]);
 
         if (error) {
-          console.error("Error inserting data: ", error.message);
           Alert.alert("Error", "There was an error submitting your data. Please try again.");
         } else {
           setIsLoading(true);
-          console.log("Data inserted successfully: ", data);
           Alert.alert("Success", "Blood Type Recorded Successfully!");
           
           router.push("/");
         }
       } catch (error) {
-        console.error("Error with Supabase operation: ", error.message);
         Alert.alert("Error", "There was an error processing your request. Please try again.");
       }
     } else {

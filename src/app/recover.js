@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, Alert, KeyboardAvoidingView, Platform, Keyboard, Stylesheet } from "react-native";
+import { View, Text, StyleSheet, Image, Alert, KeyboardAvoidingView, Platform, Keyboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "../styles/styles";
 import { TextInput, Button } from "react-native-paper";
 import { supabase } from "../utils/supabase";
+import styles from "../styles/styles";
 
 const RecoverPass = ({ navigation }) => {
     const logo = require("../../assets/RecoverPass.png");
     const footer = require("../../assets/gradient.png");
     const [email, setEmail] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
     const [logoSize, setLogoSize] = useState(150);
     const [isRegisterPressed, setIsRegisterPressed] = useState(false);
     const [isLoginLoading, setIsLoginLoading] = useState(false);
+    const [isEditing, setIsEditing] = useState(false); // Toggle for switching input fields
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+    const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible);
+    const toggleConfirmPasswordVisibility = () => setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -52,7 +59,42 @@ const RecoverPass = ({ navigation }) => {
             if (error) {
                 Alert.alert("Error", "Something went wrong. Please try again.");
             } else {
-                Alert.alert("Success", "An email has been sent to your account for password reset.");
+                setIsEditing(true); // Switch to new password fields
+                Alert.alert("Account Found", "Submit new password now!");
+                setNewPassword("");
+                setConfirmPassword("");
+            }
+        } catch (error) {
+            Alert.alert("Error", "Something went wrong. Please try again.");
+        } finally {
+            setIsLoginLoading(false);
+        }
+    };
+
+    const handleResetPassword = async () => {
+        if (newPassword.length < 6) {
+            Alert.alert("Error", "Password must be at least 6 characters long.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            Alert.alert("Error", "Passwords do not match.");
+            return;
+        }
+
+        setIsLoginLoading(true);
+
+        try {
+            const { error } = await supabase.auth.updateUser({
+                password: newPassword,
+            });
+
+            if (error) {
+                Alert.alert("Error", "Error updating password. Please try different password.");
+            } else {
+                Alert.alert("Success", "Password reset successfully.");
+                setIsEditing(false);
+                setEmail("");
             }
         } catch (error) {
             Alert.alert("Error", "Something went wrong. Please try again.");
@@ -77,21 +119,56 @@ const RecoverPass = ({ navigation }) => {
                     <Image source={logo} style={[styles.logoImage, { width: logoSize, height: logoSize, marginTop: 10 }]} />
                 </View>
                 <View>
-                    <TextInput
-                        label="EMAIL"
-                        value={email}
-                        mode="outlined"
-                        activeOutlineColor="red"
-                        outlineColor="red"
-                        textColor="black"
-                        onChangeText={setEmail}
-                        style={[styles.textInput, { fontFamily: "PoppinsBold", marginTop: 20 }]}
-                    />
+                    {!isEditing ? (
+                        <TextInput
+                            label="EMAIL"
+                            value={email}
+                            mode="outlined"
+                            activeOutlineColor="red"
+                            outlineColor="red"
+                            textColor="black"
+                            onChangeText={setEmail}
+                            style={[styles.textInput, { fontFamily: "PoppinsBold", marginTop: 20 }]}
+
+                        />
+                    ) : (
+                        <>
+                        <TextInput
+                                label="NEW PASSWORD"
+                                value={newPassword}
+                                mode="outlined"
+                                activeOutlineColor="red"
+                                outlineColor="red"
+                                textColor="black"
+                                secureTextEntry={!isPasswordVisible}
+                                onChangeText={setNewPassword}
+                                right={<TextInput.Icon icon={isPasswordVisible ? "eye-off" : "eye"} color="red" onPress={togglePasswordVisibility} />}
+                                style={[styles.textInput, { fontFamily: "PoppinsBold" }]}
+                            />
+                            <TextInput
+                                label="CONFIRM PASSWORD"
+                                value={confirmPassword}
+                                mode="outlined"
+                                activeOutlineColor="red"
+                                outlineColor="red"
+                                textColor="black"
+                                secureTextEntry={!isConfirmPasswordVisible}
+                                onChangeText={setConfirmPassword}
+                                right={<TextInput.Icon icon={isConfirmPasswordVisible ? "eye-off" : "eye"} color="red" onPress={toggleConfirmPasswordVisibility} />}
+                                style={[styles.textInput, { fontFamily: "PoppinsBold" }]}
+                            />
+                            {newPassword !== confirmPassword && confirmPassword.length > 0 && (
+                                <Text style={{ color: 'red', fontFamily: "Poppins", marginLeft: 16, fontSize: 12 }}>
+                                    Passwords don't match
+                                </Text>
+                            )}
+                        </>
+                    )}
                 </View>
                 <View style={{ alignItems: 'center' }} >
                     <Button
                         mode="contained"
-                        onPress={handlePasswordReset}
+                        onPress={!isEditing ? handlePasswordReset : handleResetPassword}
                         onPressIn={() => setIsRegisterPressed(true)}
                         onPressOut={() => setIsRegisterPressed(false)}
                         buttonColor={isRegisterPressed ? "#ff8e92" : "red"}
@@ -100,7 +177,7 @@ const RecoverPass = ({ navigation }) => {
                         loading={isLoginLoading}
                         disabled={isLoginLoading}
                     >
-                        RECOVER
+                        {isEditing ? "RESET PASSWORD" : "RECOVER"}
                     </Button>
                 </View>
                 {!isKeyboardVisible && (

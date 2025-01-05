@@ -384,10 +384,8 @@ const handleStartQuiz = async () => {
 
       if (error) {
         setIsLoading(false);
-        console.error("Error inserting data into eligibility_test table:", error.message);
         Alert.alert("Something went wrong. Please try again.");
       } else {
-        console.log("Data successfully inserted:", data);
         // Proceed to start the quiz with the auto-generated test_id
         setTestId(data.test_id); // Save the test_id from the insert response
         setQuizStarted(true); // Proceed to start the quiz
@@ -396,7 +394,6 @@ const handleStartQuiz = async () => {
       }
     } catch (error) {
       setIsLoading(false);
-      console.error("Error connecting to Supabase:", error.message);
       Alert.alert("An unexpected error occurred. Please try again later.");
     }
   } else {
@@ -421,7 +418,6 @@ const handleRetakeTest = async () => {
 const handleSubmit = async () => {
   try {
       if (!testId) {
-          console.error("Test ID is missing.");
           Alert.alert("Error", "Test ID is not found. Please start the quiz.");
           return;
       }
@@ -441,10 +437,8 @@ const handleSubmit = async () => {
           .upsert([answerData], { onConflict: ["test_id"] });
 
       if (error) {
-          console.error("Error saving test answers:", error.message);
           Alert.alert("Submission Error", "Something went wrong while saving your answers. Please try again.");
       } else {
-          console.log("Test answers successfully saved:", data);
 
           // Compare answers and show the result modal
           const eligibility = await compareAnswersAndUpdateEligibility(testId);
@@ -452,7 +446,6 @@ const handleSubmit = async () => {
           setShowResultModal(true); // Show the result modal
       }
   } catch (error) {
-      console.error("Unexpected error:", error.message);
       Alert.alert("Unexpected Error", "An unexpected error occurred. Please try again later.");
   }
 };
@@ -466,7 +459,6 @@ const compareAnswersAndUpdateEligibility = async (testId) => {
           .single();
 
       if (userError || !userData) {
-          console.error("Error retrieving user data:", userError?.message);
           Alert.alert("Error", "Unable to retrieve test answers. Please try again.");
           return false;
       }
@@ -491,12 +483,10 @@ const compareAnswersAndUpdateEligibility = async (testId) => {
           .eq("test_id", testId);
 
       if (updateError) {
-          console.error("Error updating test result:", updateError.message);
           Alert.alert("Error", "Unable to update test results. Please try again.");
       }
       return isEligible;
   } catch (error) {
-      console.error("Unexpected error:", error.message);
       Alert.alert("Unexpected Error", "An unexpected error occurred. Please try again later.");
       return false;
   }

@@ -139,7 +139,7 @@ const PostCard = ({ post }) => {
         setUserFullName(fullName || "Name not available");
         setRelativeTime(getRelativeTime(request_created_at));
       } catch (error) {
-        console.error("Error fetching user or organization data:", error.message);
+       
         setUserFullName("Name or Organization not available");
       }
     };
@@ -202,7 +202,7 @@ const PostCard = ({ post }) => {
         { event: 'DELETE', schema: 'public', table: 'organization' },
         payload => {
           if (payload.old.auth_id === auth_id) {
-            setUserFullName("Name or Organization not available");
+            setUserFullName("Name not available");
           }
         }
       )
@@ -233,7 +233,7 @@ const PostCard = ({ post }) => {
         const auth_id = authSession.session.user.id; // Get the UID of the logged-in user
         // Ensure request_id is valid before querying
         if (!request_id || request_id === "undefined") {
-          console.error("Invalid request_id:", request_id);
+  
           setShowOptionsButton(false);
           return;
         }
@@ -302,7 +302,6 @@ const PostCard = ({ post }) => {
         const { data: authUser, error: authError } =
           await supabase.auth.getUser();
         if (authError || !authUser) {
-          console.error("Error fetching authenticated user:", authError?.message);
           return;
         }
 
@@ -313,13 +312,13 @@ const PostCard = ({ post }) => {
           .getPublicUrl(filePath);
 
         if (picError) {
-          console.error("Error fetching profile picture:", picError.message);
+    
           return;
         }
 
         return `${profilePicData?.publicUrl}?t=${Date.now()}`;
       } catch (error) {
-        console.error("Error fetching profile image:", error.message);
+        
       }
     };
 
@@ -352,7 +351,7 @@ const PostCard = ({ post }) => {
 
       return imageUrl;
     } catch (error) {
-      console.error("Error fetching post image:", error.message);
+   
       return null; // Return null if an error occurs
     }
   };
@@ -441,7 +440,7 @@ const PostCard = ({ post }) => {
         .single();  // We only want a single entry
   
       if (fetchError) {
-        console.error("Error fetching request data:", fetchError.message);
+  
         alert("Failed to find the request. Please ensure the request ID is correct.");
         return;
       }
@@ -460,7 +459,7 @@ const PostCard = ({ post }) => {
           .remove([filePath]);
   
         if (deleteImageError) {
-          console.error("Error deleting image:", deleteImageError.message);
+      
           alert("Failed to delete the associated image. Continuing with the deletion of the request.");
         } else {
 
@@ -476,7 +475,7 @@ const PostCard = ({ post }) => {
         .eq("request_id", request_id); // Ensure correct field name
   
       if (deleteRequestError) {
-        console.error("Error deleting request:", deleteRequestError.message);
+     
         alert("Failed to delete the request. Please try again.");
         return;
       }
@@ -486,11 +485,11 @@ const PostCard = ({ post }) => {
         return;
       }
   
-      console.log("Request deleted successfully:", deletedRequest);
+   
       alert("Request deleted successfully!");
   
     } catch (error) {
-      console.error("Error during delete operation:", error);
+      
       alert("An error occurred while deleting your request.");
     }
   
@@ -564,7 +563,7 @@ const PostCard = ({ post }) => {
           });
   
         if (uploadError) {
-          console.error("Error uploading image:", uploadError.message);
+        
           alert("Image upload failed.");
           return;
         }
@@ -575,7 +574,7 @@ const PostCard = ({ post }) => {
           .getPublicUrl(filePath);
   
         if (imageError) {
-          console.error("Error fetching image URL:", imageError.message);
+  
           alert("Failed to get the image URL.");
           return;
         }
@@ -611,7 +610,7 @@ const PostCard = ({ post }) => {
   
       setModalVisible(false); // Close the modal after successful update
     } catch (error) {
-      console.error("Error during update operation:", error);
+     
       alert("An error occurred while updating your request.");
     }
   };
