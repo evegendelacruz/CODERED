@@ -110,7 +110,6 @@ const Home = () => {
         .select();
   
       if (dbError || !requestData || requestData.length === 0) {
-        console.error("Error inserting request data:", dbError);
         alert("Request submission failed.");
         setIsLoading(false);
         return;
@@ -130,7 +129,6 @@ const Home = () => {
           });
   
         if (uploadError) {
-          console.error("Image upload error:", uploadError);
           alert("Image upload failed.");
           setIsLoading(false);
           return;
@@ -153,7 +151,6 @@ const Home = () => {
         .eq("request_id", requestId);
   
       if (updateError) {
-        console.error("Error updating request with image URL:", updateError);
         alert("Failed to update request with image URL.");
         setIsLoading(false);
         return;
@@ -173,7 +170,6 @@ const Home = () => {
       setImage(null);
       setFileName("");
     } catch (error) {
-      console.error("Error uploading request:", error);
       alert("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
@@ -189,7 +185,6 @@ const Home = () => {
         .order("request_created_at", { ascending: false });
   
       if (error) {
-        console.error("Error fetching posts:", error);
         return;
       }
   
@@ -204,7 +199,7 @@ const Home = () => {
   
       setPosts(postsWithImages);
     } catch (err) {
-      console.error("Error fetching posts:", err);
+  
     }
   };
   

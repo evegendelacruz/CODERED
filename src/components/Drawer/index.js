@@ -18,7 +18,7 @@ export default function DrawerContent(props) {
         try {
             await router.replace('/');
         } catch (error) {
-            console.error("Error during logout:", error.message);
+          
         } finally {
             setModalVisible(false);
         }

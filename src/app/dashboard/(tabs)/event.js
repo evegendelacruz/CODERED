@@ -64,14 +64,14 @@ const Event = () => {
         .order("date", { ascending: true });
   
       if (error) {
-        console.error("Error fetching events:", error);
+        
         return;
       }
   
       const validEvents = data.filter((event) => {
         const isValidDate = !isNaN(Date.parse(event.date));
         if (!isValidDate) {
-          console.warn(`Invalid event date: ${event.date}`);
+       
         }
         return isValidDate;
       });
@@ -87,7 +87,7 @@ const Event = () => {
               .single();
 
             if (orgError) {
-              console.error(`Error fetching organization for org_id ${event.org_id}:`, orgError);
+            
               return { ...event, org_name: "Unknown Organization", profileImage: null };
             }
 
@@ -137,7 +137,7 @@ const Event = () => {
       } = await supabase.auth.getUser(); // Get the current user
 
       if (error) {
-        console.error("Error fetching user:", error);
+       
         return;
       }
 
@@ -180,7 +180,7 @@ const Event = () => {
         .single();
 
       if (orgError || !orgData) {
-        console.error("Error fetching organization:", orgError?.message || "Organization not found");
+        
         return null;
       }
 
@@ -191,7 +191,7 @@ const Event = () => {
         .getPublicUrl(filePath);
 
       if (picError) {
-        console.warn(`Error fetching profile image for org_id ${eventOrgId}:`, picError);
+        
       }
 
       // Step 3: Return the organization name and profile image
@@ -202,7 +202,7 @@ const Event = () => {
           : null,
       };
     } catch (error) {
-      console.error("Error fetching organization profile:", error.message);
+     
       return null;
     }
   };
@@ -215,7 +215,7 @@ const Event = () => {
         .select("*"); // Select all fields to ensure we get org_id and other details
 
       if (eventError || !events) {
-        console.error("Error fetching events:", eventError);
+       
         return;
       }
 
@@ -238,7 +238,7 @@ const Event = () => {
       setUserProfile(eventsWithProfiles[0] || {}); // Assuming we only need the first event's profile for display
 
     } catch (error) {
-      console.error("Error fetching user profiles:", error.message);
+      
     }
   };
 
@@ -263,7 +263,7 @@ const Event = () => {
     const { data: { user }, error: userError } = await supabase.auth.getUser();
 
     if (userError || !user) {
-      console.error("Error fetching user:", userError);
+    
       Toast.show({
         type: "error",
         position: "top",
@@ -281,7 +281,7 @@ const Event = () => {
       .single();
 
     if (orgError || !orgData) {
-      console.error("Error fetching organization:", orgError);
+     
       Toast.show({
         type: "error",
         position: "top",
@@ -293,7 +293,7 @@ const Event = () => {
 
     // Ensure that org_id is not null or undefined
     if (!orgData.org_id) {
-      console.error("Organization ID is missing.");
+    
       Toast.show({
         type: "error",
         position: "top",
@@ -319,7 +319,7 @@ const Event = () => {
     const { data, error } = await supabase.from("events").insert([newEvent]);
 
     if (error) {
-      console.error("Error saving event:", error);
+     
       Toast.show({
         type: "error",
         position: "top",

@@ -28,7 +28,6 @@ const Notification = () => {
         if (data?.account_type) {
           setAccountType(data.account_type);
         } else if (error) {
-          console.error('Error fetching user details:', error);
         }
       }
     };
@@ -46,7 +45,6 @@ const Notification = () => {
       if (data) {
         setNotifications(data);
       } else if (error) {
-        console.error('Error fetching notifications:', error);
       }
     };
 
@@ -86,7 +84,6 @@ const Notification = () => {
             ]);
           }
         } catch (error) {
-          console.error('Error adding event to notifications:', error);
           Toast.show({
             type: 'customError',
             text1: 'Error',

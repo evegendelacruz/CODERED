@@ -110,7 +110,6 @@ const Organization = () => {
       .maybeSingle();
   
     if (checkEmailError) {
-        console.log("Email check error:", checkEmailError);
         alert("An error occurred while checking the email. Please try again later");
         setIsRegisterPressed(false);
         setIsLoading(false);
@@ -131,7 +130,6 @@ const Organization = () => {
         });
 
         if (authError) {
-            console.log("session:", session);
             alert(`Registration failed: ${authError.message}`);
             setIsRegisterPressed(false);
             setIsLoading(false);
@@ -160,16 +158,12 @@ const Organization = () => {
             org_password: password, 
         };
 
-        // Log the payload to verify
-        console.log("Inserting Payload:", payload);
-
         // Step 5: Insert user data into public.user table
         const { data: insertData, error: insertError } = await supabase
             .from("organization") // Ensure you're targeting the correct schema
             .insert([payload]);
 
         if (insertError) {
-            console.error("Database Insert Error:", insertError);
             alert(`Error inserting user data: ${insertError.message}`);
             setIsRegisterPressed(false);
             setIsLoading(false);
@@ -177,13 +171,11 @@ const Organization = () => {
         }
 
         // Step 6: Successful Registration
-        console.log("Database Insert Successful:", insertData);
         alert("Registration successful!");
 
         // Navigate to the next page (e.g., blood type page)
         router.push("/"); // Adjust the navigation path as needed
     } catch (error) {
-        console.error("Unexpected Error:", error);
         alert("An unexpected error occurred during registration. Please try again.");
     } finally {
         setIsRegisterPressed(false);
