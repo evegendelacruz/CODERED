@@ -61,7 +61,6 @@ const Login = () => {
             router.replace('dashboard'); // Navigate to the dashboard or desired screen
 
         } catch (error) {
-            console.error("Error logging in:", error.message);
             Alert.alert("Error", "An error occurred while logging in. Please try again.");
             setIsLoginLoading(false); // Hide loading on error
         } finally {

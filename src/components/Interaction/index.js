@@ -23,7 +23,7 @@ const Interaction = ({ requestId }) => {
           const { data: authSession, error: authError } = await supabase.auth.getSession();
     
           if (authError || !authSession?.session?.user?.id) {
-            console.error("User not authenticated or session expired");
+         
             return; // Exit if no session or user ID is found
           }
     
@@ -64,14 +64,14 @@ const Interaction = ({ requestId }) => {
             .getPublicUrl(filePath);
     
           if (picError) {
-            console.error("Error fetching profile picture:", picError.message);
+         
             setProfileImage("https://via.placeholder.com/40"); // Fallback to a placeholder image
           } else {
             setProfileImage(profilePicData?.publicUrl || "https://via.placeholder.com/40");
           }
     
         } catch (error) {
-          console.error("Error fetching user data:", error.message);
+       
         }
       };
     
@@ -85,7 +85,7 @@ const Interaction = ({ requestId }) => {
     
         // Check if there is an error or if the user is not authenticated
         if (authError || !authUser) {
-          console.error("Error fetching authenticated user:", authError?.message);
+          
           return;
         }
     
@@ -99,14 +99,14 @@ const Interaction = ({ requestId }) => {
     
         // Check if there was an error fetching the profile picture
         if (picError) {
-          console.error("Error fetching profile picture:", picError.message);
+       
           return;
         }
     
         // Return the public URL of the profile picture
         return profilePicData?.publicUrl;
       } catch (error) {
-        console.error("Error fetching profile image:", error.message);
+        
       }
     };
     
@@ -117,7 +117,7 @@ const Interaction = ({ requestId }) => {
     const handleLike = async () => {
         try {
             if (!requestId) {
-                console.error("No requestId provided to handle like.");
+              
                 return;
             }
     
@@ -130,7 +130,7 @@ const Interaction = ({ requestId }) => {
                     .eq("request_id", requestId);
     
                 if (deleteError) {
-                    console.error("Error unliking:", deleteError.message);
+                    
                     return;
                 }
     
@@ -143,7 +143,7 @@ const Interaction = ({ requestId }) => {
                     .insert([{ request_id: requestId, auth_id: authId }]);
     
                 if (insertError) {
-                    console.error("Error liking:", insertError.message);
+                    
                     return;
                 }
     
@@ -154,7 +154,7 @@ const Interaction = ({ requestId }) => {
             // Toggle the like state
             setIsLiked((prevState) => !prevState);
         } catch (error) {
-            console.error("Error handling like/unlike:", error.message);
+            
         }
     };
     
@@ -167,7 +167,7 @@ const Interaction = ({ requestId }) => {
     if (commentText.trim()) {
         try {
             if (!requestId) {
-                console.error("No requestId provided to handle comment.");
+              
                 return;
             }
 
@@ -177,7 +177,7 @@ const Interaction = ({ requestId }) => {
                 .insert([{ request_id: requestId, auth_id: authId, comment: commentText }]);
 
             if (insertError) {
-                console.error("Error saving comment:", insertError.message);
+              
                 return;
             }
 
@@ -188,7 +188,7 @@ const Interaction = ({ requestId }) => {
             setCommentText('');
             setIsCommentVisible(false);
         } catch (error) {
-            console.error("Error handling comment:", error.message);
+         
         }
     }
 };
@@ -196,7 +196,7 @@ const Interaction = ({ requestId }) => {
 const fetchLikesAndComments = async () => {
   try {
     if (!requestId) {
-      console.error("No requestId provided to Interaction component.");
+  
       return;
     }
 
@@ -207,7 +207,7 @@ const fetchLikesAndComments = async () => {
       .eq('request_id', requestId);
 
     if (likeError) {
-      console.error("Error fetching likes:", likeError.message);
+ 
       return;
     }
 
@@ -223,7 +223,7 @@ const fetchLikesAndComments = async () => {
       .single();
 
     if (userLikeError && userLikeError.code !== 'PGRST116') {
-      console.error("Error checking user like:", userLikeError.message);
+   
       return;
     }
 
@@ -236,7 +236,7 @@ const fetchLikesAndComments = async () => {
       .eq('request_id', requestId);
 
     if (commentError) {
-      console.error("Error fetching comments:", commentError.message);
+    
       return;
     }
 
@@ -262,7 +262,7 @@ const fetchLikesAndComments = async () => {
             .single();
 
           if (orgError || !orgData) {
-            console.error("Error fetching data for comment:", orgError?.message || "Organization not found");
+           
           } else {
             fullName = orgData.org_name; // Set organization name if found
           }
@@ -277,7 +277,7 @@ const fetchLikesAndComments = async () => {
           .getPublicUrl(`user_profile/${comment.auth_id}.jpg`);
 
         if (picError) {
-          console.error("Error fetching profile picture:", picError.message);
+      
           profileImage = "https://via.placeholder.com/40"; // Default placeholder
         } else {
           profileImage = `${profilePicData?.publicUrl}?t=${Date.now()}`; // Add timestamp to get latest image
@@ -294,7 +294,7 @@ const fetchLikesAndComments = async () => {
     setComments(commentsWithUserData);
     setCommentCount(commentsWithUserData.length);
   } catch (error) {
-    console.error("Error fetching likes and comments:", error.message);
+
   }
 };
 

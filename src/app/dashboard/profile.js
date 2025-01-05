@@ -43,10 +43,6 @@ const Profile = ({ navigation }) => {
         const { data: authUser, error: authError } =
           await supabase.auth.getUser();
         if (authError || !authUser?.user) {
-          console.error(
-            "Error fetching authenticated user:",
-            authError?.message
-          );
           setUserName("Unable to load user");
           return;
         }
@@ -69,7 +65,6 @@ const Profile = ({ navigation }) => {
             .limit(1); // Ensures only a single row is returned
 
           if (orgCheckError || !orgExists || orgExists.length === 0) {
-            console.error("auth_id not found in either table");
             setUserName("User or organization not found");
             return;
           }
@@ -83,10 +78,6 @@ const Profile = ({ navigation }) => {
             .single(); // Ensure only a single row is returned
 
           if (orgError || !orgData) {
-            console.error(
-              "Error fetching organization data:",
-              orgError.message
-            );
             setUserName("Organization name not available");
             return;
           }
@@ -104,7 +95,6 @@ const Profile = ({ navigation }) => {
             .single(); // Ensures only a single row is returned
 
           if (userError || !userData) {
-            console.error("Error fetching user data:", userError.message);
             setUserName("Name not available");
             return;
           }
@@ -127,10 +117,6 @@ const Profile = ({ navigation }) => {
             .single();
 
           if (bloodError || !bloodData) {
-            console.error(
-              "Error fetching blood type data:",
-              bloodError?.message || "No blood type found"
-            );
             setBloodType("Blood type not available");
             return;
           }
@@ -149,14 +135,12 @@ const Profile = ({ navigation }) => {
           .getPublicUrl(filePath);
 
         if (picError) {
-          console.error("Error fetching profile picture:", picError.message);
           setImage(avatar); // Default image if error occurs
         } else {
           const cacheBustedUrl = `${profilePicData?.publicUrl}?t=${Date.now()}`;
           setImage(cacheBustedUrl);
         }
       } catch (error) {
-        console.error("Unexpected error:", error.message);
         setUserName("Error loading name");
       }
     };
@@ -218,7 +202,6 @@ const Profile = ({ navigation }) => {
 
   const uploadImage = async () => {
     if (!imageUri) {
-      console.log("No image URI provided.");
       return;
     }
 
@@ -227,7 +210,6 @@ const Profile = ({ navigation }) => {
       const { data: authUser, error: authError } =
         await supabase.auth.getUser();
       if (authError || !authUser) {
-        console.error("Error fetching authenticated user:", authError?.message);
         return;
       }
 
@@ -247,7 +229,6 @@ const Profile = ({ navigation }) => {
 
       // Check for errors during the upload
       if (error) {
-        console.error("Error uploading image:", error.message);
         return;
       }
 
@@ -257,7 +238,6 @@ const Profile = ({ navigation }) => {
         .getPublicUrl(filePath);
 
       if (picError) {
-        console.error("Error fetching profile picture:", picError.message);
         return;
       }
 
@@ -265,7 +245,6 @@ const Profile = ({ navigation }) => {
       const cacheBustedUrl = `${profilePicData?.publicUrl}?t=${Date.now()}`;
       setImage(cacheBustedUrl); // Set the new image URL in the state
     } catch (error) {
-      console.error("Error during image upload:", error.message);
       alert("Failed to upload the image.");
     }
   };
@@ -285,7 +264,6 @@ const Profile = ({ navigation }) => {
       try {
         const { data: authUser, error: authError } = await supabase.auth.getUser();
         if (authError || !authUser?.user) {
-          console.error("Error fetching authenticated user:", authError?.message);
           return;
         }
 
@@ -299,7 +277,6 @@ const Profile = ({ navigation }) => {
           .limit(1);
 
         if (userCheckError) {
-          console.error("Error checking user existence:", userCheckError.message);
           return;
         }
 
@@ -312,12 +289,10 @@ const Profile = ({ navigation }) => {
             .limit(1);
 
           if (orgCheckError) {
-            console.error("Error checking organization existence:", orgCheckError.message);
             return;
           }
 
           if (!orgExists || orgExists.length === 0) {
-            console.error("auth_id not found in either `user` or `organization` table");
             setUserName("User or organization not found");
             return;
           }
@@ -332,14 +307,14 @@ const Profile = ({ navigation }) => {
             .limit(1);
 
           if (orgError) {
-            console.error("Error fetching organization data:", orgError.message || "Unknown error");
+            
             setUserName("Organization name not available");
             return;
           }
 
           const organization = orgData?.[0];
           if (!organization) {
-            console.error("No organization data found");
+           
             setUserName("Organization name not available");
             return;
           }
@@ -372,13 +347,13 @@ const Profile = ({ navigation }) => {
             .limit(1);
 
           if (userError) {
-            console.error("Error fetching user data:", userError.message);
+           
             return;
           }
 
           const user = userData?.[0];
           if (!user) {
-            console.error("No user data found");
+            
             return;
           }
 
@@ -393,7 +368,7 @@ const Profile = ({ navigation }) => {
             .limit(1);
 
           if (bloodError) {
-            console.error("Error fetching blood type data:", bloodError.message);
+          
             return;
           }
 
@@ -421,13 +396,13 @@ const Profile = ({ navigation }) => {
           .getPublicUrl(filePath);
 
         if (picError) {
-          console.error("Error fetching profile picture:", picError.message);
+         
           setImage(avatar); // Default image if error occurs
         } else {
           setImage(`${profilePicData?.publicUrl}?t=${Date.now()}`); // Cache-busting
         }
       } catch (error) {
-        console.error("Unexpected error:", error.message);
+        
         setUserName("Error loading name");
       }
     };
@@ -453,7 +428,7 @@ const Profile = ({ navigation }) => {
       // Fetch authenticated user
       const { data: authUser, error: authError } = await supabase.auth.getUser();
       if (authError || !authUser?.user) {
-        console.error("Error fetching authenticated user:", authError?.message);
+       
         alert("Error fetching authenticated user. Please log in again.");
         setIsLoading(false);
         return;
@@ -479,7 +454,7 @@ const Profile = ({ navigation }) => {
             .single(); // Ensure only one row is returned
 
         if (orgFetchError || !orgData) {
-            console.error("Error fetching current organization data:", orgFetchError?.message);
+           
             alert("Error fetching current organization data.");
             setIsLoading(false);
             return;
@@ -510,7 +485,7 @@ const Profile = ({ navigation }) => {
             });
 
             if (authUpdateError) {
-                console.error("Error updating password:", authUpdateError.message);
+              
                 alert("Error updating password. Please try again.");
                 setIsLoading(false);
                 return;
@@ -523,7 +498,7 @@ const Profile = ({ navigation }) => {
                 .eq("auth_id", authData.user.id);
 
             if (orgPasswordUpdateError) {
-                console.error("Error updating organization password:", orgPasswordUpdateError.message);
+               
                 alert("Error updating organization password.");
                 setIsLoading(false);
                 return;
@@ -538,7 +513,7 @@ const Profile = ({ navigation }) => {
             .eq("auth_id", authId);
 
         if (orgUpdateError) {
-            console.error("Error updating organization data:", orgUpdateError.message);
+           
             alert("Error updating organization details.");
             setIsLoading(false);
             return;
@@ -573,7 +548,6 @@ const Profile = ({ navigation }) => {
           .single();
 
         if (userFetchError) {
-          console.error("Error fetching current password:", userFetchError.message);
           alert("Error fetching current user data.");
           setIsLoading(false);
           return;
@@ -588,7 +562,6 @@ const Profile = ({ navigation }) => {
           });
 
           if (authUpdateError) {
-            console.error("Error updating password:", authUpdateError.message);
             alert("Error updating password. Please try again.");
             setIsLoading(false);
             return;
@@ -601,7 +574,6 @@ const Profile = ({ navigation }) => {
             .eq("auth_id", authData.user.id);
 
           if (userUpdateError) {
-            console.error("Error updating user password:", userUpdateError.message);
             alert("Error updating user password.");
             setIsLoading(false);
             return;
@@ -615,7 +587,6 @@ const Profile = ({ navigation }) => {
             email: formData.email,
           });
           if (emailUpdateError) {
-            console.error("Error updating email:", emailUpdateError.message);
             alert("Error updating email.");
             setIsLoading(false);
             return;
@@ -629,7 +600,6 @@ const Profile = ({ navigation }) => {
           .eq("auth_id", authId);
 
         if (userUpdateError) {
-          console.error("Error updating user data:", userUpdateError.message);
           alert("Error updating user details.");
           setIsLoading(false);
           return;
@@ -652,10 +622,6 @@ const Profile = ({ navigation }) => {
             .eq("auth_id", authId);
 
         if (bloodUpdateError) {
-          console.error(
-            "Error updating blood type data:",
-            bloodUpdateError.message
-          );
           alert("Error updating blood type.");
           setIsLoading(false);
           return;
@@ -668,7 +634,6 @@ const Profile = ({ navigation }) => {
           Alert.alert("Confirmation", "Profile information updated successfully!");
           setIsLoading(false);
         } catch (uploadError) {
-          console.error("Error uploading image:", uploadError.message);
           alert("Failed to upload image.");
           setIsLoading(false);
         }
@@ -680,7 +645,6 @@ const Profile = ({ navigation }) => {
       // Return to view mode
       setIsEditing(false);
     } catch (error) {
-      console.error("Error during update operation:", error.message);
       alert("An error occurred while updating the profile.");
       setIsLoading(false);
     }
