@@ -286,7 +286,6 @@ const RequestFormModal = ({
                 onChangeText={setCaption}
 
               />
-
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
@@ -344,7 +343,7 @@ const RequestFormModal = ({
                   }}
                 />
               ) : null}
-
+              <Text style={{fontFamily:'Poppins', color:'gray', fontSize: 11, textAlign:'justify'}}>Only <Text style={{fontFamily:'PoppinsBold', color:'black'}}>JPG or JPEG</Text> images are allowed. If you upload an unsupported file type, default system image will be shown on your post.</Text>
               <Button
                 mode="contained"
                 buttonColor={"#fe0009"}

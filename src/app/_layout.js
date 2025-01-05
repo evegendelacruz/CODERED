@@ -27,12 +27,15 @@ const RootLayout = () => {
               animation: 'fade',
             }}
           >
-            <Stack.Screen name="index" options={{headerShown: false, }} />
+            <Stack.Screen name="index" options={{headerShown: false, headerStyle: {
+                backgroundColor: 'red', elevation: 0
+              },}} />
             <Stack.Screen name="portal" options={{
               title: 'PORTAL', 
               headerShown: true,  
               headerStyle: {
                 backgroundColor: 'red',
+                elevation: 0
               },
               headerTintColor: 'white', 
               headerTitleStyle: {
@@ -100,28 +103,6 @@ const RootLayout = () => {
                 headerShown: false 
               }} 
             />
-
-          <Stack.Screen
-            name="message"
-            options={({ route, navigation }) => ({
-              title: 'MESSAGES',
-              headerShown: true,
-              drawerActiveTintColor: '#fe0009',
-              headerStyle: {
-                backgroundColor: '#fe0009',
-                elevation: 0,
-                shadowOpacity: 0,
-                shadowOffset: { height: 0, width: 0 },
-                shadowRadius: 0,
-              },
-              headerTintColor: 'white',
-              headerTitleStyle: {
-                fontFamily: 'PoppinsBold',
-                fontSize: 20,
-              },
-              headerTitleAlign: 'center',
-            })}
-          />
           </Stack>
         </SafeAreaProvider>       
     </PaperProvider>

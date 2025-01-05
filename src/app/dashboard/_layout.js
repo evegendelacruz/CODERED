@@ -16,15 +16,6 @@ export default function DrawerLayout() {
         <Drawer.Screen
             name="(tabs)"
             options={{
-                headerRight: () => (
-                    <Button 
-                        icon={() => <AntDesign name="message1" size={24} color="white" marginRight={-10} />}
-                        title="Info" 
-                        onPress={() => router.push('/message')}
-                        
-                        
-                    />
-                ),
                 drawerLabel: ({ focused }) => (
                 <Text
                     style={{

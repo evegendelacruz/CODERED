@@ -492,6 +492,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 10,
+    borderColor: "gray",
+    borderWidth: 0.3,
   },
   inputWithButton: {
     flex: 1,
@@ -539,6 +541,9 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 10,
+    borderColor: "gray",
+    borderWidth: 0.3,
+    backgroundColor:'lightgray'
   },
   
   commentContent: {
@@ -570,6 +575,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 10,
+    borderColor: "gray",
+    borderWidth: 0.3,
   },
   
 });
