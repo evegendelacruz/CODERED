@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, ScrollView, Image, View, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, Text, ScrollView, Image, View, TouchableOpacity, Platform, Alert } from 'react-native';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { TextInput, Button, Checkbox,  } from "react-native-paper";
 import { useRouter } from 'expo-router'; 
@@ -78,7 +78,6 @@ const Register = () => {
     // Basic Validation - Check if all fields are filled
     if (
         !firstName ||
-        !middleName ||
         !lastName ||
         !email ||
         !password ||
@@ -92,7 +91,7 @@ const Register = () => {
         !currentAddress ||
         !zipcode
     ) {
-        alert("Please complete all fields.");
+        Alert.alert("Registration Error","Please complete all fields.");
         setIsRegisterPressed(false);
         setIsLoading(false);
         return;
@@ -152,7 +151,7 @@ const Register = () => {
         // Step 4: Prepare user data payload (no need to include user_id since it's auto-generated)
         const payload = {
             user_firstname: firstName,
-            user_middlename: middleName,
+            user_middlename: middleName || null,
             user_lastname: lastName,
             user_gender: selectedGender,
             user_birthdate: formattedBirthdate,
@@ -185,7 +184,7 @@ const Register = () => {
 
         // Step 6: Successful Registration
         console.log("Database Insert Successful:", insertData);
-        alert("Registration successful!");
+        Alert.alert("Success","Registration successful!");
 
         // Navigate to the next page (e.g., blood type page)
         router.push("/bloodtype"); // Adjust the navigation path as needed
@@ -226,7 +225,7 @@ const Register = () => {
               ]}
             />
             <TextInput
-              label="MIDDLE INITIAL"
+              label="MIDDLE INITIAL (Optional)"
               value={middleName}
               mode="outlined"
               activeOutlineColor="red"

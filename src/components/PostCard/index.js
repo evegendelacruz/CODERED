@@ -822,6 +822,9 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 10,
+    borderColor: "gray",
+    borderWidth: 0.3,
+    backgroundColor:'lightgray'
   },
   headerText: {
     flex: 1,

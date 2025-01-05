@@ -63,7 +63,6 @@ const DashboardLayout = () => {
           headerSearchBarOptions: {
                 placeholder: 'Search',
                 onChangeText: (text) => {
-                    // Do something
                 },
                 },
           title: 'TRACKER',

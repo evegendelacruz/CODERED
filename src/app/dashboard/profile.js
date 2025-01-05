@@ -110,12 +110,14 @@ const Profile = ({ navigation }) => {
           }
 
           const { user_firstname, user_middlename, user_lastname } = userData;
-          const firstName = user_firstname || "";
-          const middleName = user_middlename || "";
-          const lastName = user_lastname || "";
-          const middleInitial = middleName ? `${middleName[0]}.` : "";
+          const firstName = user_firstname ? user_firstname : "";
+          const middleName = user_middlename ? user_middlename : "";
+          const lastName = user_lastname ? user_lastname : "";
+
+          const middleInitial = middleName && middleName.length > 0 ? `${middleName[0]}.` : "";
           const fullName = `${firstName} ${middleInitial} ${lastName}`.trim();
           setUserName(fullName || "Name not available");
+
 
           // Fetch blood type information
           const { data: bloodData, error: bloodError } = await supabase
@@ -909,6 +911,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     borderColor: "white",
     marginHorizontal: 10,
+    backgroundColor: 'lightgray'
   },
   cameraButton: {
     position: "absolute",
